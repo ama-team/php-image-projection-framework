@@ -27,12 +27,13 @@
     "codeception/codeception": "^2.3",
     "phpmd/phpmd": "^2.6",
     "imagine/imagine": "^0.7.1",
-    "phpunit/phpcov": "^4.0",
+    "phpunit/phpcov": ">= 3.1.0 < 5.0",
     "consolidation/robo": "^1.1",
     "allure-framework/allure-codeception": "^1.2",
     "league/flysystem-vfs": "^1.0",
     "symfony/serializer": "^3.3",
-    "php-coveralls/php-coveralls": "^1.0"
+    "php-coveralls/php-coveralls": "^1.0",
+    "symfony/property-access": "^3.3"
   },
   "suggest": {
     "ext/gd": "Preferred image processing backend",

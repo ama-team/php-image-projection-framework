@@ -7,6 +7,7 @@ use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Specification;
 use AmaTeam\Image\Projection\Test\Support\Assert;
+use AmaTeam\Image\Projection\Test\Support\Dummy\HandlerDummy;
 use AmaTeam\Image\Projection\Type\AbstractHandler;
 use AmaTeam\Image\Projection\Type\MappingInterface;
 use AmaTeam\Image\Projection\Type\ReaderInterface;
@@ -40,25 +41,7 @@ class AbstractHandlerTest extends Unit
             $manager->expects($this->any())->method('create')->willReturn($image);
             $manager->expects($this->any())->method('read')->willReturn($image);
         }
-        return new class ($filesystem, $manager, $mapping) extends AbstractHandler {
-            private $mapping;
-            /**
-             * @inheritDoc
-             */
-            public function __construct(
-                FilesystemInterface $filesystem,
-                Manager $imageManager,
-                MappingInterface $mapping
-            ) {
-                $this->mapping = $mapping;
-                parent::__construct($filesystem, $imageManager);
-            }
-
-            public function createMapping(Box $size)
-            {
-                return $this->mapping;
-            }
-        };
+        return new HandlerDummy($filesystem, $manager, $mapping);
     }
 
     /**
