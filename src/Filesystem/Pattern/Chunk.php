@@ -45,10 +45,9 @@ class Chunk
             $parameter = $match[1];
             if (in_array($parameter, $this->parameters)) {
                 return '(?:\w+)';
-            } else {
-                $this->parameters[] = $parameter;
-                return sprintf('(?<%s>\w+)', $parameter);
             }
+            $this->parameters[] = $parameter;
+            return sprintf('(?<%s>\w+)', $parameter);
         }, $chunk);
         if ($expression === $chunk) {
             return;

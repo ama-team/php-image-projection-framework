@@ -8,6 +8,22 @@ class RoboFile extends \Robo\Tasks // NOSONAR
     const DEFAULT_TEST_OPTIONS = ['coverage' => false];
     const COVERAGE_DIRECTORY = 'Coverage';
 
+    public function testSetup()
+    {
+        $this
+            ->taskFilesystemStack()
+            ->mkdir(self::testsMetadataDir())
+            ->run()
+            ->stopOnFail();
+        $this
+            ->taskExecStack()
+            ->exec([self::binary('codecept'), 'build'])
+            ->run()
+            ->stopOnFail();
+        $manager = new Manager();
+        $manager->install();
+    }
+
     private function runTests($suite = null, array $options = self::DEFAULT_TEST_OPTIONS)
     {
         $suite = $suite ? self::normalizeTestSuite($suite) : null;
@@ -20,7 +36,7 @@ class RoboFile extends \Robo\Tasks // NOSONAR
             ->run()
             ->stopOnFail();
         $task = $this
-            ->taskCodecept()
+            ->taskCodecept(self::binary('codecept'))
             ->suite($suite)
             ->xml(self::testsMetadataDir(array_merge($directory, ['junit.xml'])))
             ->debug();
@@ -52,40 +68,11 @@ class RoboFile extends \Robo\Tasks // NOSONAR
         return $this->runTests('Acceptance', $options);
     }
 
-    public function testCoverage()
-    {
-        $command = [
-            self::binary('phpcov'),
-            'merge',
-            '--html',
-            self::testsReportDir([self::COVERAGE_DIRECTORY]),
-            '--',
-            self::testsMetadataDir()
-        ];
-        return $this
-            ->taskExecStack()
-            ->exec($command)
-            ->run();
-    }
-
     public function test()
     {
         $this->testClean()->stopOnFail();
         $this->runTests()->stopOnFail();
-        return $this->testCoverage();
-    }
-
-    public function testWatch()
-    {
-        $entries = array_map(function ($entry) {
-            return implode('/', [__DIR__, $entry]);
-        }, ['src', 'tests/Suite']);
-        return $this
-            ->taskWatch()
-            ->monitor($entries, function () {
-                $this->test();
-            })
-            ->run();
+        return $this->coverageReport();
     }
 
     public function testClean()
@@ -100,11 +87,11 @@ class RoboFile extends \Robo\Tasks // NOSONAR
 
     public function testReport()
     {
-        $this->testCoverage()->stopOnFail();
-        return $this->testAllure();
+        $this->coverageReport()->stopOnFail();
+        return $this->allureReport();
     }
 
-    public function testAllure()
+    public function allureReport()
     {
         $command = [
             'allure',
@@ -121,20 +108,35 @@ class RoboFile extends \Robo\Tasks // NOSONAR
             ->run();
     }
 
-    public function testSetup()
+    public function coveragePublish($suite = null)
     {
-        $this
-            ->taskFilesystemStack()
-            ->mkdir(self::testsMetadataDir())
-            ->run()
-            ->stopOnFail();
+        $suite = self::normalizeTestSuite($suite);
+        $directory = $suite ? ['Suite', $suite] : [];
+        $path = array_merge($directory, ['Coverage', 'coverage.xml']);
         $this
             ->taskExecStack()
-            ->exec([self::binary('codecept'), 'build'])
-            ->run()
-            ->stopOnFail();
-        $manager = new Manager();
-        $manager->install();
+            ->exec([
+                self::binary('coveralls'),
+                '-x',
+                self::testsMetadataDir($path)
+            ])
+            ->run();
+    }
+
+    public function coverageReport()
+    {
+        $command = [
+            self::binary('phpcov'),
+            'merge',
+            '--html',
+            self::testsReportDir([self::COVERAGE_DIRECTORY]),
+            '--',
+            self::testsMetadataDir()
+        ];
+        return $this
+            ->taskExecStack()
+            ->exec($command)
+            ->run();
     }
 
     public function lint()
@@ -174,21 +176,6 @@ class RoboFile extends \Robo\Tasks // NOSONAR
             $executor->process(implode(' ', $command));
         }
         return $executor->run();
-    }
-
-    public function testPublishCoverage($suite = null)
-    {
-        $suite = self::normalizeTestSuite($suite);
-        $directory = $suite ? ['Suite', $suite] : [];
-        $path = array_merge($directory, ['Coverage', 'coverage.xml']);
-        $this
-            ->taskExecStack()
-            ->exec([
-                self::binary('coveralls'),
-                '-x',
-                self::testsMetadataDir($path)
-            ])
-            ->run();
     }
 
     private static function path(array $path = [])

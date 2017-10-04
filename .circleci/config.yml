@@ -1,0 +1,124 @@
+parameters:
+  jabba:
+    version: &jabba_version 0.7.0
+    cache_key: &jabba_cache_key v1-jabba-0.7.0
+  java:
+    version: &java_version zulu@1.8.131
+  allure:
+    version: &allure_version 2.3.5
+    cache_key: &allure_cache_key v1-allure-2.3.5
+  composer:
+    cache_key: &composer_cache_key v1-composer-{{ checksum "composer.json" }}
+  docker:
+    image: &docker_image circleci/php:5.6
+version: 2
+jobs:
+  build:
+    docker:
+      - image: *docker_image
+    working_directory: /tmp/workspace
+    environment:
+      JABBA_VERSION: *jabba_version
+      JAVA_VERSION: *java_version
+      ALLURE_VERSION: *allure_version
+    steps:
+      - checkout
+      - restore_cache:
+          key: *jabba_cache_key
+      - run:
+          name: 'Setup: Install Jabba & Java'
+          command: |
+            set -euxo pipefail
+            sudo ln -sf ~/.jabba/bin/jabba /usr/local/bin/jabba
+            [ ! -d ~/.jabba ] || exit 0
+            curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
+            jabba install $JAVA_VERSION
+      - save_cache:
+          key: *jabba_cache_key
+          paths:
+            - ~/.jabba
+      - restore_cache:
+          key: *allure_cache_key
+      - run:
+          name: 'Setup: Install Allure'
+          command: |
+            set -euxo pipefail
+            sudo ln -sf ~/allure/bin/allure /usr/local/bin/allure
+            [ ! $(which allure) ] || exit 0
+            curl -L "https://dl.bintray.com/qameta/generic/io/qameta/allure/allure/$ALLURE_VERSION/allure-$ALLURE_VERSION.zip" > /tmp/allure.zip
+            unzip /tmp/allure.zip -d /tmp/allure
+            mkdir -p ~/allure
+            sudo mv /tmp/allure/*/* ~/allure
+      - save_cache:
+          key: *allure_cache_key
+          paths:
+            - ~/allure
+      - run:
+          name: 'Setup: Install Library Dependencies'
+          command: |
+            sudo apt-get install -yq libpng-dev libjpeg-dev libmagickwand-dev
+            sudo docker-php-ext-configure gd --with-jpeg-dir=/usr/include
+            sudo docker-php-ext-install -j$(nproc) bcmath gd
+            printf "\n" | sudo pecl install imagick
+            sudo docker-php-ext-enable imagick
+      - restore_cache:
+          key: *composer_cache_key
+      - run:
+          name: 'Setup: Composer Install'
+          command: composer install --no-progress
+      - save_cache:
+          key: *composer_cache_key
+          paths:
+            - vendor
+      - run:
+          name: 'Setup: Enabling XDebug'
+          command: sudo docker-php-ext-enable xdebug
+      - run:
+          name: 'Setup: Configure PHP'
+          command: |
+            echo 'memory_limit = -1' | sudo tee -a /usr/local/etc/php/php.ini
+            echo 'date.timezone = UTC' | sudo tee -a /usr/local/etc/php/php.ini
+      - run:
+          name: 'Setup: Prepare Workspace'
+          command: bin/robo test:setup
+      - run:
+          name: Lint
+          # todo: don't forget to enable it when PHPMD ruleset will be finished
+          command: 'bin/robo lint || :'
+      - run: 
+          name: 'Test: Unit'
+          command: bin/robo test:unit --coverage
+      - run:
+          name: 'Test: Unit: Publish Coverage' 
+          command: bin/robo coverage:publish unit
+      - run: 
+          name: 'Test: Integration'
+          command: bin/robo test:integration --coverage
+      - run:
+          name: 'Test: Integration: Publish Coverage' 
+          command: bin/robo coverage:publish integration
+      - run: 
+          name: 'Test: Functional'
+          command: bin/robo test:functional --coverage
+      - run:
+          name: 'Test: Functional: Publish Coverage' 
+          command: bin/robo coverage:publish functional
+      - run:
+          name: 'Speedup Hack: Disabling XDebug'
+          command: sudo mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini{,.disabled}
+      - run:
+          name: 'Test: Acceptance'
+          command: php -d xdebug.coverage_enable=0 bin/robo test:acceptance
+      - run:
+          name: 'Reverse Hack: Enabling XDebug Again'
+          command: sudo mv /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini{.disabled,}
+      - run:
+          name: 'Report: Generate'
+          command: |
+            export JAVA_HOME="$(jabba which $JAVA_VERSION)"
+            bin/robo test:report
+      - store_artifacts:
+          path: tests/Report
+          when: always
+      - store_test_results:
+          path: tests/Metadata

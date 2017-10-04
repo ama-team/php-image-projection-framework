@@ -1,5 +1,15 @@
 # AmaTeam\Image\Projection
 
+[![Packagist](https://img.shields.io/packagist/v/ama-team/projection-framework.svg?style=flat-square)](https://packagist.org/packages/ama-team/projection-framework)
+[![CircleCI branch](https://img.shields.io/circleci/project/github/ama-team/php-projection-framework/master.svg?style=flat-square)](https://circleci.com/gh/ama-team/php-projection-framework/tree/master)
+[![Coveralls](https://img.shields.io/coveralls/ama-team/php-projection-framework/master.svg?style=flat-square)](https://coveralls.io/github/ama-team/php-projection-framework?branch=master)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/ama-team/php-projection-framework/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/ama-team/php-projection-framework)
+[![Code Climate](https://img.shields.io/codeclimate/github/ama-team/php-projection-framework.svg?style=flat-square)](https://codeclimate.com/github/ama-team/php-projection-framework)
+
+<sup><sub>
+Don't believe the coverage, it's [lying](https://github.com/sebastianbergmann/php-code-coverage/issues/409).
+</sub></sup>
+
 This is a simple library created for common work with sphere 
 projections - at the moment of writing, to convert equirectangular and
 cube map projection types one into another.
@@ -218,6 +228,12 @@ Following command will generate coverage and [Allure][] reports:
 ```bash
 bin/robo test:report
 ```
+
+### Dev branch state
+
+[![CircleCI](https://img.shields.io/circleci/project/github/ama-team/php-projection-framework/dev.svg?style=flat-square)](https://circleci.com/gh/ama-team/php-projection-framework/tree/dev)
+[![Coveralls](https://img.shields.io/coveralls/ama-team/php-projection-framework/dev.svg?style=flat-square)](https://coveralls.io/github/ama-team/php-projection-framework?branch=dev)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/ama-team/php-projection-framework/dev.svg?style=flat-square)](https://scrutinizer-ci.com/g/ama-team/php-projection-framework)
 
 ## License
 
