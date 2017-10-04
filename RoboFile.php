@@ -6,13 +6,14 @@ class RoboFile extends \Robo\Tasks // NOSONAR
 {
     const COVERAGE_OPTION = 'coverage';
     const DEFAULT_TEST_OPTIONS = ['coverage' => false];
+    const COVERAGE_DIRECTORY = 'Coverage';
 
     private function runTests($suite = null, array $options = self::DEFAULT_TEST_OPTIONS)
     {
         $suite = $suite ? self::normalizeTestSuite($suite) : null;
         $directory = $suite ? ['Suite', $suite] : [];
         $coverageDir = $directory;
-        $coverageDir[] = 'Coverage';
+        $coverageDir[] = self::COVERAGE_DIRECTORY;
         $this
             ->taskFilesystemStack()
             ->mkdir(self::testsMetadataDir($coverageDir))
@@ -57,9 +58,7 @@ class RoboFile extends \Robo\Tasks // NOSONAR
             self::binary('phpcov'),
             'merge',
             '--html',
-            self::testsReportDir(['Coverage']),
-            '--clover',
-            self::testsReportDir(['coverage.clover.xml']),
+            self::testsReportDir([self::COVERAGE_DIRECTORY]),
             '--',
             self::testsMetadataDir()
         ];
@@ -160,7 +159,7 @@ class RoboFile extends \Robo\Tasks // NOSONAR
                 'html',
                 implode(',', $rules),
                 '--reportfile',
-                self::testsReportDir(['Lint'. 'phpmd.html'])
+                self::testsReportDir(['Lint', 'phpmd.html'])
             ]
         ];
         $this
@@ -177,9 +176,19 @@ class RoboFile extends \Robo\Tasks // NOSONAR
         return $executor->run();
     }
 
-    public function testReportPublish()
+    public function testPublishCoverage($suite = null)
     {
-        // noop for now
+        $suite = self::normalizeTestSuite($suite);
+        $directory = $suite ? ['Suite', $suite] : [];
+        $path = array_merge($directory, ['Coverage', 'coverage.xml']);
+        $this
+            ->taskExecStack()
+            ->exec([
+                self::binary('coveralls'),
+                '-x',
+                self::testsMetadataDir($path)
+            ])
+            ->run();
     }
 
     private static function path(array $path = [])
@@ -219,6 +228,9 @@ class RoboFile extends \Robo\Tasks // NOSONAR
 
     private static function normalizeTestSuite($suite)
     {
+        if (!$suite) {
+            return null;
+        }
         return strtoupper($suite[0]) . strtolower(substr($suite, 1));
     }
 }

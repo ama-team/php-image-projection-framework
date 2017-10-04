@@ -1,8 +1,8 @@
 # AmaTeam\Image\Projection
 
 This is a simple library created for common work with sphere 
-projections - at the moment of writing, to convert equirectangular,
-cube map and little planet projection types one into another.
+projections - at the moment of writing, to convert equirectangular and
+cube map projection types one into another.
 
 ## Installation
 
@@ -19,7 +19,7 @@ through `league/flysystem`, which is explicitly set as dependency.
 
 ```php
 use \AmaTeam\Image\Projection\Framework;
-use \AmaTeam\Image\Projection\Framework\ConversionOptions;
+use \AmaTeam\Image\Projection\Framework\EncodingOptions;
 use \AmaTeam\Image\Projection\Specification;
 use \AmaTeam\Image\Projection\Image\Format;
 
@@ -28,16 +28,17 @@ $source = new Specification('equirect', 'tmp/uploads/source.jpg');
 $target = new Specification(
     'cube',
     'static/pano/{f}/{x}/{y}.jpg',
-    new Box(512, 512)
+    new Box(512, 512) // tile size,
+    new Box(2, 2) // layout, amount of tiles horiaontally and vertically
 );
 
-$options = new EncodingOptions()->setQuality(0.9);
+$options = (new EncodingOptions())->setQuality(0.9);
 
 $framework->convert($source, $target, Format::JPEG, $options);
 ```
 
-You'll need a Framework instance to start off, it will use `cwd()` as
-fs root. Next, Framework has `#convert()` and `#convertAll()` methods
+You'll need a `Framework` instance to start off, it will use `cwd()` as
+fs root. Next, `Framework` has `#convert()` and `#convertAll()` methods
 to turn one specification into other (others), optionally specifying
 format and encoding options (don't worry, it's already jpeg / 90% by 
 default). Specification is basically a description of a pano: it's 
@@ -101,7 +102,7 @@ texel by texel. This raises following problems:
 
 - To complete target projection, source projection has to be fully
 loaded into RAM. This could be quite a lot for big projections, and
-teh library itself doesn't do any size validations, so you have to 
+the library itself doesn't do any size validations, so you have to 
 watch RAM yourself. Also, image loading adds time penalty itself.
 - The main workload is giant loop that asks for color of specific
 sphere coordinates and then populates target image with that color.
@@ -159,6 +160,7 @@ is SaveListener that is not included by default:
 
 ```php
 $listener = new SaveListener(Format::JPEG);
+$conversion = $framework->createConversion($source, $target);
 $conversion
     ->addListener($listener)
     ->run();
@@ -175,8 +177,7 @@ register in framework:
 
 ```php
 $framework = new Framework();
-$handler = new LittlePlanetHandler();
-$framework->getRegistry()->register('LittlePlanet', $handler); 
+$framework->getRegistry()->register('LittlePlanet', new LittlePlanetHandler()); 
 ``` 
 
 You're ready to go.
@@ -185,17 +186,43 @@ You're ready to go.
 
 Feel free to fork and send PR to **dev** branch.
 
-### Running tests
+### Testing
+
+Testing is done using Codeception, and everything, except for directory
+structure and installable fixtures, is quite the usual.
+
+To install the fixtures, simply run `test:setup` task:
+
+```bash
+bin/robo test:setup
+```
+
+This will download some public license test images from flickr 
+and put them into `tests/Data/External/Projections`, as well as
+cur them into faces.
+
+You can run tests by using `test` and `test:<suite>` commands:
 
 ```bash
 bin/robo test
-bin/robo test:report
+bin/robo test:acceptance
+bin/robo test:unit --coverage
 ```
 
-Please note that acceptance tests are terribly slow and CPU intensive.
+Acceptance tests are doing some real work mangling millions of texels, 
+so you should never ever turn on coverage for them unless you are on
+Intel Stress Test team. They are already slow enough, believe me.
+
+Following command will generate coverage and [Allure][] reports:
+
+```bash
+bin/robo test:report
+```
 
 ## License
 
 MIT License
 
 AMA Team, 2017
+
+  [allure]: https://github.com/allure-framework/allure

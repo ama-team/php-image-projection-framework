@@ -107,10 +107,6 @@ class ConversionTest extends Unit
             ->setType($type)
             ->setPattern($encodedPattern)
             ->setTileSize($this->getTileSize($type));
-        $decoded = (new Specification())
-            ->setType($fixture->getType())
-            ->setPattern($decodedPattern)
-            ->setTileSize($this->getTileSize($fixture->getType()));
         $this->executeStep('Encoding', function () use ($source, $encoded) {
             $this
                 ->framework
@@ -119,6 +115,10 @@ class ConversionTest extends Unit
                 ->addListener(new SaveListener())
                 ->run();
         });
+        $decoded = (new Specification())
+            ->setType($fixture->getType())
+            ->setPattern($decodedPattern)
+            ->setTileSize($source->getTileSize());
         $this->executeStep('Decoding', function () use ($encoded, $decoded) {
             $this
                 ->framework

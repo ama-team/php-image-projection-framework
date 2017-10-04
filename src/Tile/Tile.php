@@ -8,8 +8,6 @@ use AmaTeam\Image\Projection\Image\Manager;
 
 /**
  * Represents single tile - rectangular projection chunk.
- *
- * TODO: Tile should not save and restore itself - leave it to outer world
  */
 class Tile
 {
