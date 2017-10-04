@@ -1,0 +1,52 @@
+{
+  "name": "ama-team/image-projection-framework",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "AMA Team",
+      "email": "dev@amagroup.ru"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "AmaTeam\\Image\\Projection\\": "src/"
+    }
+  },
+  "autoload-dev" :{
+    "psr-4": {
+      "AmaTeam\\Image\\Projection\\Test\\": "tests/",
+      "AmaTeam\\Image\\Projection\\Benchmark\\": "benchmark/"
+    }
+  },
+  "require": {
+    "php": ">= 5.6",
+    "league/flysystem": "^1.0",
+    "psr/log": "^1.0"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.1",
+    "codeception/codeception": "^2.3",
+    "phpmd/phpmd": "^2.6",
+    "imagine/imagine": "^0.7.1",
+    "phpunit/phpcov": "^4.0",
+    "consolidation/robo": "^1.1",
+    "henrikbjorn/lurker": "^1.2",
+    "allure-framework/allure-codeception": "^1.2",
+    "league/flysystem-vfs": "^1.0",
+    "phpbench/phpbench": "^0.13.0",
+    "symfony/serializer": "^3.3",
+    "symfony/validator": "^3.3",
+    "symfony/property-access": "^3.3"
+  },
+  "suggest": {
+    "ext/gd": "Preferred image processing backend",
+    "ext/imagick": "Slower but still applicable processing backend"
+  },
+  "scripts": {
+    "test:prepare": "codecept build",
+    "test": "robo test"
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}

@@ -1,0 +1,102 @@
+- type: Equirectangular
+  size:
+    width: 2048
+    height: 1024
+  reference: https://www.flickr.com/photos/simonwaldherr/35999118900/
+  url: https://farm5.staticflickr.com/4375/35999118900_477db853fb_o_d.jpg
+- type: Equirectangular
+  size:
+    width: 2048
+    height: 1024
+  reference: https://www.flickr.com/photos/simonwaldherr/36266162042/
+  url: https://farm5.staticflickr.com/4336/36266162042_957432e5d9_o_d.jpg
+- type: LittlePlanet
+  size:
+    width: 2048
+    height: 2048
+  reference: https://www.flickr.com/photos/simonwaldherr/36518878345
+  url: https://farm5.staticflickr.com/4339/36518878345_52d533fb29_o_d.jpg
+- type: CubeMap
+  size:
+    width: 1024
+    height: 1024
+  layout:
+    width: 4
+    height: 3
+  faces:
+    f:
+      x: 1
+      y: 1
+    b:
+      x: 3
+      y: 1
+    l:
+      x: 0
+      y: 1
+    r:
+      x: 2
+      y: 1
+    u:
+      x: 1
+      y: 0
+    d:
+      x: 1
+      y: 2
+  reference: https://www.flickr.com/photos/132026524@N02/32530288762/
+  url: https://farm1.staticflickr.com/624/32530288762_9b06a35f3b_o_d.png
+- type: CubeMap
+  size:
+    width: 1024
+    height: 1024
+  layout:
+    width: 4
+    height: 3
+  faces:
+    f:
+      x: 1
+      y: 1
+    b:
+      x: 3
+      y: 1
+    l:
+      x: 0
+      y: 1
+    r:
+      x: 2
+      y: 1
+    u:
+      x: 1
+      y: 0
+    d:
+      x: 1
+      y: 2
+  reference: https://www.flickr.com/photos/149461274@N05/34181065716/
+  url: https://farm3.staticflickr.com/2837/34181065716_6a1fc49c98_o_d.png
+- type: CubeMap
+  size:
+    width: 1024
+    height: 1024
+  layout:
+    width: 3
+    height: 2
+  faces:
+    f:
+      x: 2
+      y: 0
+    b:
+      x: 2
+      y: 1
+    l:
+      x: 0
+      y: 1
+    r:
+      x: 0
+      y: 0
+    u:
+      x: 1
+      y: 0
+    d:
+      x: 1
+      y: 1
+  reference: https://www.flickr.com/photos/sigilo/26739126172/
+  url: https://farm8.staticflickr.com/7174/26739126172_68f1ae3ee0_o_d.png
