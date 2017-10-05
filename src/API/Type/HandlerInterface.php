@@ -1,29 +1,29 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Type;
+namespace AmaTeam\Image\Projection\API\Type;
 
-use AmaTeam\Image\Projection\Framework\FilterInterface;
-use AmaTeam\Image\Projection\Specification;
+use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 
 interface HandlerInterface
 {
     /**
      * Creates new accessor for projection described by specification
      *
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      * @return ReaderInterface
      */
-    public function read(Specification $specification);
+    public function read(SpecificationInterface $specification);
 
     /**
      * @param ReaderInterface $source
-     * @param Specification $target
+     * @param SpecificationInterface $target
      * @param FilterInterface[] $filters
      * @return GeneratorInterface Iterator that emits tiles.
      */
     public function createGenerator(
         ReaderInterface $source,
-        Specification $target,
+        SpecificationInterface $target,
         array $filters = []
     );
 }

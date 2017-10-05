@@ -1,6 +1,6 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Image;
+namespace AmaTeam\Image\Projection\API\Image;
 
 /**
  * Known image formats enumeration

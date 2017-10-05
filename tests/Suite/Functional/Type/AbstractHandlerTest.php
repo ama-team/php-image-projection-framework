@@ -3,14 +3,13 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Specification;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 use AmaTeam\Image\Projection\Test\Support\Dummy\HandlerDummy;
-use AmaTeam\Image\Projection\Type\AbstractHandler;
-use AmaTeam\Image\Projection\Type\MappingInterface;
-use AmaTeam\Image\Projection\Type\ReaderInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 use Codeception\Test\Unit;
 use League\Flysystem\FilesystemInterface;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
@@ -54,37 +53,8 @@ class AbstractHandlerTest extends Unit
         return $this->createHandler()->read($specification);
     }
 
-    /**
-     * @test
-     */
-    public function readComputesSpecificationSizes()
-    {
-        /** @var FilesystemInterface|Mock $filesystem */
-        $filesystem = $this->createMock(FilesystemInterface::class);
-        $filesystem
-            ->expects($this->any())
-            ->method('listContents')
-            ->willReturn([['path' => 'directory/source.jpg', 'parameters' => []]]);
-        $specification = (new Specification())
-            ->setPattern('directory/source.jpg');
-        /** @var ImageInterface|Mock $image */
-        $image = $this->createMock(ImageInterface::class);
-        $image->expects($this->any())->method('getWidth')->willReturn(10);
-        $image->expects($this->any())->method('getHeight')->willReturn(10);
-        /** @var Manager|Mock $manager */
-        $manager = $this->createMock(Manager::class);
-        $manager
-            ->expects($this->any())
-            ->method('read')
-            ->willReturn($image);
-        $handler = $this->createHandler($filesystem, $manager);
-        $handler->read($specification);
-        $size = new Box(10, 10);
-        $layout = new Box(1, 1);
-        Assert::assertEquals($layout, $specification->getLayout());
-        Assert::assertEquals($size, $specification->getTileSize());
-        Assert::assertEquals($specification->getSize(), $size);
-    }
+    // TODO: test that will assure specification sizes are computed if not
+    // present
 
     /**
      * @test

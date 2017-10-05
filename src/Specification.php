@@ -2,10 +2,15 @@
 
 namespace AmaTeam\Image\Projection;
 
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Filesystem\Pattern;
 use AmaTeam\Image\Projection\Geometry\Box;
 
-class Specification
+/**
+ * Specification describes single projection: it's type, path (pattern) and
+ * sizes (tile size, overall size, number of tiles in face row and column).
+ */
+class Specification implements SpecificationInterface
 {
     /**
      * @var string
@@ -13,20 +18,29 @@ class Specification
     private $type;
 
     /**
+     * Projection path (if applicable).
+     *
      * @var Pattern
      */
     private $pattern;
 
     /**
+     * Width and height of single tile in pixels (texels?)
+     *
      * @var Box
      */
     private $tileSize;
 
     /**
+     * Projection face layout: number of tiles in row and column.
+     *
      * @var Box
      */
     private $layout;
+
     /**
+     * Overall size of single face (basically tileSize x layout)
+     *
      * @var Box
      */
     private $size;

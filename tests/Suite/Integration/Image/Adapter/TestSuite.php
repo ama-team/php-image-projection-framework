@@ -1,9 +1,9 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Test\Suite\Integration\Adapter;
+namespace AmaTeam\Image\Projection\Test\Suite\Integration\Image\Adapter;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
-use AmaTeam\Image\Projection\Image\Format;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\Format;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 
 class TestSuite

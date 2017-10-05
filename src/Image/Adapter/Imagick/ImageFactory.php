@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Image\Adapter\Imagick;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use Imagick;
 
 class ImageFactory implements ImageFactoryInterface

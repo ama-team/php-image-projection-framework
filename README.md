@@ -134,9 +134,11 @@ enough to solve it efficiently.
 ## Filtering generated tiles, adding processors and listeners
 
 All the specified above needs more fine work and other methods.
-`Framework` instance also has methods `createConversion()` and
+`Framework` instance provides method `getConverter()` that allows more
+detailed work using methods `createConversion()` and
 `createConversions()`. Those will create an object ready to 
-perform conversion, but not yet launched.
+perform conversion, but not yet launched (which is done through
+`#run()` method), and which expose additional processing capabilities.
 
 If you've considered parallelizing work by scheduling different tiles
 to different workers, you'll need to restrict some tiles from being 
@@ -145,8 +147,11 @@ this case:
 
 ```php
 // only specified faces will be created
-$filter = new FaceFilter('u', 'f', 'l');
-$framework->createConversion($source, $target, $filter)->run();
+$filter = new FaceFilter('f', 'b');
+$framework
+    ->getConverter()
+    ->createConversion($source, $target, $filter)
+    ->run();
 ```
 
 If you need to add some kind of watermark or apply custom antialiasing,
@@ -155,10 +160,11 @@ you can do it via processor which is run on tile after it's generation:
 ```php
 $fxaaProcessor = new FXAAProcessor();
 $watermarkProcessor = new WatermarkProcessor();
-$conversion = $framework->createConversion($source, $target);
-// 50 is order in which processor will run, so it will run before
-// watermark processor
-$conversion
+$conversion = $framework
+    ->getConverter()
+    ->createConversion($source, $target);
+    // 50 is order in which processor will run, so it will run before
+    // watermark processor
     ->addProcessor(50, $fxaaProcessor)
     ->addProcessor(99, $watermarkProcessor);
     ->run();
@@ -170,8 +176,9 @@ is SaveListener that is not included by default:
 
 ```php
 $listener = new SaveListener(Format::JPEG);
-$conversion = $framework->createConversion($source, $target);
-$conversion
+$conversion = $framework
+    ->getConverter()
+    ->createConversion($source, $target)
     ->addListener($listener)
     ->run();
 ```
@@ -187,7 +194,7 @@ register in framework:
 
 ```php
 $framework = new Framework();
-$framework->getRegistry()->register('LittlePlanet', new LittlePlanetHandler()); 
+$framework->register('LittlePlanet', new LittlePlanetHandler()); 
 ``` 
 
 You're ready to go.

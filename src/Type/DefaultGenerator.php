@@ -2,11 +2,15 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
-use AmaTeam\Image\Projection\Framework\FilterInterface;
+use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
+use AmaTeam\Image\Projection\API\Tile\PositionInterface;
 use AmaTeam\Image\Projection\Image\Manager;
-use AmaTeam\Image\Projection\Specification;
 use AmaTeam\Image\Projection\Tile\Position;
 use AmaTeam\Image\Projection\Tile\Tile;
+use AmaTeam\Image\Projection\API\Type\GeneratorInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 
 class DefaultGenerator implements GeneratorInterface
 {
@@ -23,19 +27,19 @@ class DefaultGenerator implements GeneratorInterface
      */
     private $mapping;
     /**
-     * @var Specification
+     * @var SpecificationInterface
      */
     private $target;
-    /**
-     * @var string[]
-     */
-    private $faces;
     /**
      * @var FilterInterface[]
      */
     private $filters = [];
 
 
+    /**
+     * @var string[]
+     */
+    private $faces;
     /**
      * @var int
      */
@@ -55,7 +59,7 @@ class DefaultGenerator implements GeneratorInterface
      */
     private $cursor;
     /**
-     * @var Position
+     * @var PositionInterface
      */
     private $key;
 
@@ -63,13 +67,13 @@ class DefaultGenerator implements GeneratorInterface
      * @param Manager $imageManager
      * @param ReaderInterface $reader
      * @param MappingInterface $mapping
-     * @param Specification $target
+     * @param SpecificationInterface $target
      * @param FilterInterface[] $filters
      */
     public function __construct(
         Manager $imageManager,
         ReaderInterface $reader,
-        Specification $target,
+        SpecificationInterface $target,
         MappingInterface $mapping,
         array $filters = []
     ) {
@@ -163,8 +167,10 @@ class DefaultGenerator implements GeneratorInterface
         return $tile;
     }
 
-    private function allowed(Position $position, Specification $specification)
-    {
+    private function allowed(
+        PositionInterface $position,
+        SpecificationInterface $specification
+    ) {
         foreach ($this->filters as $filter) {
             if (!$filter->allows($position, $specification)) {
                 return false;

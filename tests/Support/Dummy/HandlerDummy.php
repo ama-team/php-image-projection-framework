@@ -5,7 +5,7 @@ namespace AmaTeam\Image\Projection\Test\Support\Dummy;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Type\AbstractHandler;
-use AmaTeam\Image\Projection\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use League\Flysystem\FilesystemInterface;
 
 class HandlerDummy extends AbstractHandler

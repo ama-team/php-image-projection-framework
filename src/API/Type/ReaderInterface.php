@@ -1,6 +1,6 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Type;
+namespace AmaTeam\Image\Projection\API\Type;
 
 /**
  * This interface describes an API for reading an abstract ellipsoid, recorded

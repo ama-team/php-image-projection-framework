@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Image\Adapter\Imagick;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
 use Imagick;
 use ImagickDraw;

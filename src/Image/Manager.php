@@ -2,8 +2,8 @@
 
 namespace AmaTeam\Image\Projection\Image;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use League\Flysystem\FilesystemInterface;
 use Symfony\Component\DependencyInjection\Exception\BadMethodCallException;
 

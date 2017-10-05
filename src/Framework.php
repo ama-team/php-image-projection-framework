@@ -2,18 +2,18 @@
 
 namespace AmaTeam\Image\Projection;
 
-use AmaTeam\Image\Projection\Framework\ConversionPipeline;
-use AmaTeam\Image\Projection\Framework\FilterInterface;
-use AmaTeam\Image\Projection\Framework\Listener\SaveListener;
+use AmaTeam\Image\Projection\API\ConverterInterface;
+use AmaTeam\Image\Projection\API\FrameworkInterface;
+use AmaTeam\Image\Projection\Framework\Converter;
+use AmaTeam\Image\Projection\Conversion\Listener\SaveListener;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
-use AmaTeam\Image\Projection\Image\Format;
-use AmaTeam\Image\Projection\Type\HandlerInterface;
-use AmaTeam\Image\Projection\Type\ReaderInterface;
+use AmaTeam\Image\Projection\API\Image\Format;
+use AmaTeam\Image\Projection\API\Type\HandlerInterface;
 use AmaTeam\Image\Projection\Type\Registry;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class Framework
+class Framework implements FrameworkInterface
 {
     /**
      * @var Registry
@@ -23,6 +23,10 @@ class Framework
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var ConverterInterface
+     */
+    private $converter;
 
     /**
      * @param Registry $registry
@@ -39,6 +43,7 @@ class Framework
         }
         $this->registry = $registry;
         $this->logger = $logger;
+        $this->converter = new Converter($registry);
     }
 
     /**
@@ -64,7 +69,7 @@ class Framework
         EncodingOptions $options = null
     ) {
         $persistenceListener = new SaveListener($format, $options);
-        $pipeline = $this->createConversion($source, $target);
+        $pipeline = $this->converter->createConversion($source, $target);
         $pipeline->addListener($persistenceListener);
         $pipeline->run();
     }
@@ -81,7 +86,7 @@ class Framework
         $format = Format::JPEG,
         EncodingOptions $options = null
     ) {
-        $pipelines = $this->createConversions($source, $targets);
+        $pipelines = $this->converter->createConversions($source, $targets);
         $listener = new SaveListener($format, $options);
         foreach ($pipelines as $pipeline) {
             $pipeline->addListener($listener);
@@ -90,56 +95,32 @@ class Framework
     }
 
     /**
-     * @param Specification $source
-     * @param Specification[] $targets
-     * @param FilterInterface[] $filters
-     * @return ConversionPipeline[]
-     */
-    public function createConversions(
-        Specification $source,
-        array $targets,
-        ...$filters
-    ) {
-        $reader = $this->getHandler($source->getType())->read($source);
-        $pipelines = [];
-        foreach ($targets as $target) {
-            $pipelines[] = $this->createPipeline($reader, $target, $filters);
-        }
-        return $pipelines;
-    }
-
-    /**
-     * Creates conversion pipeline for single target.
+     * Registers new type handler
      *
-     * @param Specification $source
-     * @param Specification $target
-     * @param FilterInterface[] $filters
-     * @return ConversionPipeline
+     * @param string $type
+     * @param HandlerInterface $handler
+     * @return $this
      */
-    public function createConversion(
-        Specification $source,
-        Specification $target,
-        ...$filters
-    ) {
-        $reader = $this->getHandler($source->getType())->read($source);
-        return $this->createPipeline($reader, $target, $filters);
+    public function register($type, HandlerInterface $handler)
+    {
+        $this->registry->register($type, $handler);
+        return $this;
     }
 
     /**
-     * @param ReaderInterface $source
-     * @param Specification $target
-     * @param FilterInterface[] $filters
-     * @return ConversionPipeline
+     * @return string[]
      */
-    private function createPipeline(
-        ReaderInterface $source,
-        Specification $target,
-        array $filters
-    ) {
-        $generator = $this
-            ->getHandler($target->getType())
-            ->createGenerator($source, $target, $filters);
-        return new ConversionPipeline($target, $generator);
+    public function getRegisteredTypes()
+    {
+        return $this->registry->getRegisteredTypes();
+    }
+
+    /**
+     * @return ConverterInterface
+     */
+    public function getConverter()
+    {
+        return $this->converter;
     }
 
     /**

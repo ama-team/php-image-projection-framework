@@ -2,11 +2,11 @@
 
 namespace AmaTeam\Image\Projection\Test\Suite\Integration\Image;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use AmaTeam\Image\Projection\Image\Adapter\Gd\ImageFactory as GdFactory;
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\Adapter\Imagick\ImageFactory as ImagickFactory;
-use AmaTeam\Image\Projection\Image\Format;
+use AmaTeam\Image\Projection\API\Image\Format;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 use Codeception\Test\Unit;

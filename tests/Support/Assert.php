@@ -2,8 +2,8 @@
 
 namespace AmaTeam\Image\Projection\Test\Support;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
-use AmaTeam\Image\Projection\Image\Format;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\Format;
 use Imagick;
 
 class Assert extends \PHPUnit\Framework\Assert

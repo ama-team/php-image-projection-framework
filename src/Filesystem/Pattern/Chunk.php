@@ -9,7 +9,7 @@ class Chunk
 {
     const TYPE_EXACT_MATCH = 'exact';
     const TYPE_EXPRESSION = 'match';
-    const PATTERN = '/\{(\w+)\}/';
+    const PATTERN = '/\{([\w\-]+)\}/';
 
     /**
      * Chunk type, one of Chunk::TYPE_* constants
@@ -44,10 +44,10 @@ class Chunk
         $expression = preg_replace_callback(self::PATTERN, function ($match) {
             $parameter = $match[1];
             if (in_array($parameter, $this->parameters)) {
-                return '(?:\w+)';
+                return '(?:[\w\-]+)';
             }
             $this->parameters[] = $parameter;
-            return sprintf('(?<%s>\w+)', $parameter);
+            return sprintf('(?<%s>[\w\-]+)', $parameter);
         }, $chunk);
         if ($expression === $chunk) {
             return;

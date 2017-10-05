@@ -2,9 +2,8 @@
 
 namespace AmaTeam\Image\Projection\Type\Equirectangular;
 
-use AmaTeam\Image\Projection\Constants;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use InvalidArgumentException;
 
 /**
@@ -55,7 +54,7 @@ class Mapping implements MappingInterface
     public function getPosition($latitude, $longitude)
     {
         return [
-            Constants::DEFAULT_FACE,
+            self::DEFAULT_FACE,
             (int) (($longitude + M_PI) * $this->hResolution),
             (int) (((M_PI / 2) - $latitude) * $this->vResolution)
         ];
@@ -74,7 +73,7 @@ class Mapping implements MappingInterface
 
     public function getFaces()
     {
-        return [Constants::DEFAULT_FACE];
+        return [self::DEFAULT_FACE];
     }
 
     /**

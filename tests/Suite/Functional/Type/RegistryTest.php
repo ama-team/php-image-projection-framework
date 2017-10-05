@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Test\Suite\Functional\Type;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 use AmaTeam\Image\Projection\Type\Equirectangular\Handler;
 use AmaTeam\Image\Projection\Type\Registry;

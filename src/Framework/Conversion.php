@@ -2,17 +2,20 @@
 
 namespace AmaTeam\Image\Projection\Framework;
 
-use AmaTeam\Image\Projection\Specification;
+use AmaTeam\Image\Projection\API\ConversionInterface;
+use AmaTeam\Image\Projection\API\Conversion\ListenerInterface;
+use AmaTeam\Image\Projection\API\Conversion\ProcessorInterface;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Tile\Tile;
-use AmaTeam\Image\Projection\Type\GeneratorInterface;
+use AmaTeam\Image\Projection\API\Type\GeneratorInterface;
 
 /**
  * Single-run conversion processing that encapsulates all userspace handlers.
  */
-class ConversionPipeline
+class Conversion implements ConversionInterface
 {
     /**
-     * @var Specification
+     * @var SpecificationInterface
      */
     private $target;
     /**
@@ -29,11 +32,11 @@ class ConversionPipeline
     private $processors = [];
 
     /**
-     * @param Specification $target
+     * @param SpecificationInterface $target
      * @param GeneratorInterface $generator
      */
     public function __construct(
-        Specification $target,
+        SpecificationInterface $target,
         GeneratorInterface $generator
     ) {
         $this->target = $target;
@@ -54,10 +57,12 @@ class ConversionPipeline
 
     /**
      * @param Tile $tile
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      */
-    private function applyProcessors(Tile $tile, Specification $specification)
-    {
+    private function applyProcessors(
+        Tile $tile,
+        SpecificationInterface $specification
+    ) {
         foreach ($this->processors as $processors) {
             foreach ($processors as $processor) {
                 $processor->process($tile, $specification);
@@ -67,10 +72,12 @@ class ConversionPipeline
 
     /**
      * @param Tile $tile
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      */
-    private function notifyListeners(Tile $tile, Specification $specification)
-    {
+    private function notifyListeners(
+        Tile $tile,
+        SpecificationInterface $specification
+    ) {
         foreach ($this->listeners as $listener) {
             $listener->accept($tile, $specification);
         }

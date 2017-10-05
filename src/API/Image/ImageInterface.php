@@ -1,6 +1,6 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Image\Adapter;
+namespace AmaTeam\Image\Projection\API\Image;
 
 use AmaTeam\Image\Projection\Image\EncodingOptions;
 

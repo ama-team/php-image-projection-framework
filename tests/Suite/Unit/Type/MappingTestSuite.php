@@ -3,7 +3,7 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
 use AmaTeam\Image\Projection\Test\Support\Assert;
-use AmaTeam\Image\Projection\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use Codeception\Test\Unit;
 
 abstract class MappingTestSuite extends Unit
