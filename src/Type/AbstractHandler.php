@@ -3,6 +3,7 @@
 namespace AmaTeam\Image\Projection\Type;
 
 use AmaTeam\Image\Projection\API\SpecificationInterface;
+use AmaTeam\Image\Projection\API\Type\ValidatingMappingInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Tile\Loader;
@@ -54,6 +55,9 @@ abstract class AbstractHandler implements HandlerInterface
         $tileSize = $tileSize ?: SizeExtractor::extractTileSize($face);
         $size = $specification->getSize() ?: SizeExtractor::extractSize($face);
         $mapping = $this->createMapping($size);
+        if ($mapping instanceof ValidatingMappingInterface) {
+            $mapping->validate($tree, $specification);
+        }
         return $this->createReader($mapping, $tree, $tileSize);
     }
 
