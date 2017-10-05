@@ -2,6 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Image\Adapter;
 
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use RuntimeException;
 
 class Discovery

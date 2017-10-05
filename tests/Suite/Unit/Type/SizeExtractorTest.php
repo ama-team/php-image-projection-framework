@@ -3,7 +3,7 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\Type\SizeExtractor;

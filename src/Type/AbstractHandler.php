@@ -2,11 +2,14 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Manager;
-use AmaTeam\Image\Projection\Specification;
 use AmaTeam\Image\Projection\Tile\Loader;
 use AmaTeam\Image\Projection\Tile\Tile;
+use AmaTeam\Image\Projection\API\Type\HandlerInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 use BadMethodCallException;
 use League\Flysystem\FilesystemInterface;
 
@@ -36,7 +39,7 @@ abstract class AbstractHandler implements HandlerInterface
     /**
      * @inheritDoc
      */
-    public function read(Specification $specification)
+    public function read(SpecificationInterface $specification)
     {
         $loader = new Loader($this->imageManager, $this->filesystem);
         $pattern = $specification->getPattern();
@@ -47,14 +50,10 @@ abstract class AbstractHandler implements HandlerInterface
         }
         $tree = Tile::treeify($tiles);
         $face = reset($tree);
-        if (!$specification->getLayout()) {
-            $specification->setLayout(SizeExtractor::calculateLayout($face));
-        }
-        if (!$specification->getTileSize()) {
-            $specification->setTileSize(SizeExtractor::extractTileSize($face));
-        }
-        $mapping = $this->createMapping($specification->getSize());
         $tileSize = $specification->getTileSize();
+        $tileSize = $tileSize ?: SizeExtractor::extractTileSize($face);
+        $size = $specification->getSize() ?: SizeExtractor::extractSize($face);
+        $mapping = $this->createMapping($size);
         return $this->createReader($mapping, $tree, $tileSize);
     }
 
@@ -63,7 +62,7 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function createGenerator(
         ReaderInterface $source,
-        Specification $target,
+        SpecificationInterface $target,
         array $filters = []
     ) {
         if (!$target->getSize()) {

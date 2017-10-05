@@ -4,7 +4,7 @@ namespace AmaTeam\Image\Projection\Type\CubeMap;
 
 use AmaTeam\Image\Projection\Type\CubeMap\Mapping\Face;
 use AmaTeam\Image\Projection\Type\CubeMap\Mapping\Vector;
-use AmaTeam\Image\Projection\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 
 class Mapping implements MappingInterface
 {

@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Tile;
 
-use AmaTeam\Image\Projection\Constants;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\Filesystem\Locator;
 use AmaTeam\Image\Projection\Filesystem\Pattern;
 use AmaTeam\Image\Projection\Image\Manager;
@@ -55,7 +55,7 @@ class Loader
     {
         $x = self::lookup($parameters, ['x', 'h'], 0);
         $y = self::lookup($parameters, ['y', 'v'], 0);
-        $defaultFace = Constants::DEFAULT_FACE;
+        $defaultFace = MappingInterface::DEFAULT_FACE;
         $face = self::lookup($parameters, ['face', 'f'], $defaultFace);
         $position = new Position($face, $x, $y);
         return new Tile($path, $position, $this->manager);

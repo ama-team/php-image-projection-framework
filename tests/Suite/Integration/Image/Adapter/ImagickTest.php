@@ -1,6 +1,6 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Test\Suite\Integration\Adapter;
+namespace AmaTeam\Image\Projection\Test\Suite\Integration\Image\Adapter;
 
 use AmaTeam\Image\Projection\Image\Adapter\Imagick\ImageFactory;
 use Codeception\Test\Unit;

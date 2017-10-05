@@ -1,8 +1,8 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Framework;
+namespace AmaTeam\Image\Projection\API\Conversion;
 
-use AmaTeam\Image\Projection\Specification;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Tile\Tile;
 
 /**
@@ -13,8 +13,8 @@ interface ProcessorInterface
 {
     /**
      * @param Tile $tile
-     * @param Specification $specification
+     * @param SpecificationInterface $specification
      * @return void
      */
-    public function process(Tile $tile, Specification $specification);
+    public function process(Tile $tile, SpecificationInterface $specification);
 }

@@ -3,9 +3,10 @@
 namespace AmaTeam\Image\Projection\Type;
 
 use AmaTeam\Image\Projection\Image\Adapter\Discovery;
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use AmaTeam\Image\Projection\Filesystem\Factory;
 use AmaTeam\Image\Projection\Image\Manager;
+use AmaTeam\Image\Projection\API\Type\HandlerInterface;
 use AmaTeam\Image\Projection\Type\CubeMap\Handler as CubeMapHandler;
 use AmaTeam\Image\Projection\Type\Equirectangular\Handler as EquirectHandler;
 use League\Flysystem\FilesystemInterface;

@@ -2,17 +2,16 @@
 
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
-use AmaTeam\Image\Projection\Constants;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Specification;
 use AmaTeam\Image\Projection\Test\Support\Assert;
 use AmaTeam\Image\Projection\Tile\Position;
 use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\Type\DefaultGenerator;
-use AmaTeam\Image\Projection\Type\MappingInterface;
-use AmaTeam\Image\Projection\Type\ReaderInterface;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
+use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 use Codeception\Test\Unit;
 use Iterator;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
@@ -55,6 +54,7 @@ class GeneratorTest extends Unit
 
     private function createReader()
     {
+        /** @var ReaderInterface|Mock $mock */
         $mock = $this->createMock(ReaderInterface::class);
         $mock
             ->expects($this->any())
@@ -65,15 +65,16 @@ class GeneratorTest extends Unit
 
     private function createMapping()
     {
+        /** @var MappingInterface|Mock $mock */
         $mock = $this->createMock(MappingInterface::class);
         $mock
             ->expects($this->any())
             ->method('getPosition')
-            ->willReturn([Constants::DEFAULT_FACE, 0, 0]);
+            ->willReturn([MappingInterface::DEFAULT_FACE, 0, 0]);
         $mock
             ->expects($this->any())
             ->method('getFaces')
-            ->willReturn([Constants::DEFAULT_FACE, self::SECOND_FACE]);
+            ->willReturn([MappingInterface::DEFAULT_FACE, self::SECOND_FACE]);
         return $mock;
     }
 
@@ -137,7 +138,7 @@ class GeneratorTest extends Unit
         $position = $generator->key();
         Assert::assertEquals(0, $position->getX());
         Assert::assertEquals(0, $position->getY());
-        Assert::assertEquals(Constants::DEFAULT_FACE, $position->getFace());
+        Assert::assertEquals(MappingInterface::DEFAULT_FACE, $position->getFace());
         $generator->next();
         $position = $generator->key();
         Assert::assertEquals(0, $position->getX());
@@ -153,7 +154,7 @@ class GeneratorTest extends Unit
         $generator = $this->createGenerator();
         $position = $generator->current()->getPosition();
         Assert::assertInstanceOf(Position::class, $position);
-        Assert::assertEquals(Constants::DEFAULT_FACE, $position->getFace());
+        Assert::assertEquals(MappingInterface::DEFAULT_FACE, $position->getFace());
         Assert::assertEquals(0, $position->getX());
         Assert::assertEquals(0, $position->getY());
         Assert::assertTrue($generator->valid());

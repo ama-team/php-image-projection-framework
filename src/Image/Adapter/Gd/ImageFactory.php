@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Image\Adapter\Gd;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageFactoryInterface;
+use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 
 class ImageFactory implements ImageFactoryInterface
 {

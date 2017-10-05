@@ -11,6 +11,11 @@ class Fixture
     const INSTALLATION_PATH = 'External/Projection';
     const SOURCE_PATH_SUFFIX = '/source.jpg';
     const PATTERN_SUFFIX = '/faces/{face}/{x}/{y}.jpg';
+
+    /**
+     * @var string
+     */
+    private $id;
     /**
      * @var string
      */
@@ -47,6 +52,22 @@ class Fixture
      * @var string
      */
     private $source;
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return string

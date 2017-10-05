@@ -2,7 +2,8 @@
 
 namespace AmaTeam\Image\Projection\Tile;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
+use AmaTeam\Image\Projection\API\Tile\PositionInterface;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
 use AmaTeam\Image\Projection\Image\Manager;
 
@@ -20,7 +21,7 @@ class Tile
      */
     private $manager;
     /**
-     * @var Position
+     * @var PositionInterface
      */
     private $position;
     /**
@@ -30,12 +31,12 @@ class Tile
 
     /**
      * @param string $path
-     * @param Position $position
+     * @param PositionInterface $position
      * @param Manager $manager
      */
     public function __construct(
         $path,
-        Position $position,
+        PositionInterface $position,
         Manager $manager
     ) {
         $this->path = $path;
@@ -57,12 +58,6 @@ class Tile
         return $this->image;
     }
 
-    public function release()
-    {
-        $this->image = null;
-        return $this;
-    }
-
     public function persist($format, EncodingOptions $options = null)
     {
         if ($this->image) {
@@ -72,7 +67,7 @@ class Tile
     }
 
     /**
-     * @return Position
+     * @return PositionInterface
      */
     public function getPosition()
     {

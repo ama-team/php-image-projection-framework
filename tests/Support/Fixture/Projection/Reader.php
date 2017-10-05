@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Test\Support\Fixture\Projection;
 
-use AmaTeam\Image\Projection\Constants;
+use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\Filesystem\Pattern;
 use AmaTeam\Image\Projection\Geometry\Box;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -35,7 +35,8 @@ class Reader
         $denormalizer = $this->denormalizer;
         /** @var Fixture $fixture */
         $fixture = $denormalizer->denormalize($definition, Fixture::class);
-        $defaultFace = Constants::DEFAULT_FACE;
+        $fixture->setId(md5($fixture->getUrl()));
+        $defaultFace = MappingInterface::DEFAULT_FACE;
         $faces = $fixture->getFaces() ?: [$defaultFace => ['x' => 0, 'y' => 0]];
         $faces = array_map(function ($data) use ($denormalizer) {
             return $denormalizer->denormalize($data, Offset::class);
@@ -61,7 +62,7 @@ class Reader
         $segments = [
             $this->workspace,
             Fixture::INSTALLATION_PATH,
-            md5($fixture->getUrl())
+            $fixture->getId()
         ];
         return implode(DIRECTORY_SEPARATOR, $segments);
     }

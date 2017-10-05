@@ -2,9 +2,9 @@
 
 namespace AmaTeam\Image\Projection\Image\Adapter\Gd;
 
-use AmaTeam\Image\Projection\Image\Adapter\ImageInterface;
+use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
-use AmaTeam\Image\Projection\Image\Format;
+use AmaTeam\Image\Projection\API\Image\Format;
 
 class Image implements ImageInterface
 {

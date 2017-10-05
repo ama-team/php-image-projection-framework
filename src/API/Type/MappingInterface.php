@@ -1,9 +1,10 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Type;
+namespace AmaTeam\Image\Projection\API\Type;
 
 interface MappingInterface
 {
+    const DEFAULT_FACE = '-';
     /**
      * @param float $latitude
      * @param float $longitude

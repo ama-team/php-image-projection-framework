@@ -1,11 +1,11 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Framework\Listener;
+namespace AmaTeam\Image\Projection\Conversion\Listener;
 
-use AmaTeam\Image\Projection\Framework\ListenerInterface;
+use AmaTeam\Image\Projection\API\Conversion\ListenerInterface;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
-use AmaTeam\Image\Projection\Image\Format;
-use AmaTeam\Image\Projection\Specification;
+use AmaTeam\Image\Projection\API\Image\Format;
 use AmaTeam\Image\Projection\Tile\Tile;
 
 class SaveListener implements ListenerInterface
@@ -31,7 +31,7 @@ class SaveListener implements ListenerInterface
         $this->encoding = $encoding ?: EncodingOptions::defaults();
     }
 
-    public function accept(Tile $tile, Specification $specification)
+    public function accept(Tile $tile, SpecificationInterface $specification)
     {
         $tile->persist($this->format, $this->encoding);
     }

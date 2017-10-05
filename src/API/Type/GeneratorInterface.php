@@ -1,8 +1,8 @@
 <?php
 
-namespace AmaTeam\Image\Projection\Type;
+namespace AmaTeam\Image\Projection\API\Type;
 
-use AmaTeam\Image\Projection\Tile\Position;
+use AmaTeam\Image\Projection\API\Tile\PositionInterface;
 use AmaTeam\Image\Projection\Tile\Tile;
 use Iterator;
 
@@ -14,7 +14,7 @@ interface GeneratorInterface extends Iterator
     public function current();
 
     /**
-     * @return Position
+     * @return PositionInterface
      */
     public function key();
 }

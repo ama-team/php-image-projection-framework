@@ -2,10 +2,12 @@
 
 namespace AmaTeam\Image\Projection\Tile;
 
+use AmaTeam\Image\Projection\API\Tile\PositionInterface;
+
 /**
  * Represents tile position in projection
  */
-class Position
+class Position implements PositionInterface
 {
     /**
      * @var string

@@ -3,7 +3,7 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Acceptance;
 
 use AmaTeam\Image\Projection\Framework;
-use AmaTeam\Image\Projection\Framework\Listener\SaveListener;
+use AmaTeam\Image\Projection\Conversion\Listener\SaveListener;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Adapter\Discovery;
 use AmaTeam\Image\Projection\Image\Manager as ImageManager;
@@ -21,6 +21,9 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use Ramsey\Uuid\Uuid;
+use Yandex\Allure\Adapter\Allure;
+use Yandex\Allure\Adapter\Event\AddParameterEvent;
+use Yandex\Allure\Adapter\Model\ParameterKind;
 use Yandex\Allure\Adapter\Support\StepSupport;
 
 class ConversionTest extends Unit
@@ -86,13 +89,19 @@ class ConversionTest extends Unit
      */
     public function testConversion(Fixture $fixture, $type)
     {
+        $event = new AddParameterEvent(
+            'reference',
+            $fixture->getReference(),
+            ParameterKind::ARGUMENT
+        );
+        Allure::lifecycle()->fire($event);
         if (!$this->framework->getRegistry()->exists($fixture->getType())) {
             $message = "Type {$fixture->getType()} is not yet supported";
             /** @noinspection PhpUndefinedMethodInspection */
             $this->markTestSkipped($message);
             return;
         }
-        $this->executeStep('Save source tiles', function () use ($fixture) {
+        $this->executeStep('Saving source tiles', function () use ($fixture) {
             foreach ($this->loader->load($fixture->getPattern()) as $tile) {
                 $this->attachmentListener->accept($tile);
             }
@@ -110,6 +119,7 @@ class ConversionTest extends Unit
         $this->executeStep('Encoding', function () use ($source, $encoded) {
             $this
                 ->framework
+                ->getConverter()
                 ->createConversion($source, $encoded)
                 ->addListener($this->attachmentListener)
                 ->addListener(new SaveListener())
@@ -118,10 +128,11 @@ class ConversionTest extends Unit
         $decoded = (new Specification())
             ->setType($fixture->getType())
             ->setPattern($decodedPattern)
-            ->setTileSize($source->getTileSize());
+            ->setTileSize($fixture->getSize());
         $this->executeStep('Decoding', function () use ($encoded, $decoded) {
             $this
                 ->framework
+                ->getConverter()
                 ->createConversion($encoded, $decoded)
                 ->addListener($this->attachmentListener)
                 ->addListener(new SaveListener())
@@ -136,9 +147,9 @@ class ConversionTest extends Unit
         $class = get_class($registry->getHandler($type));
         switch ($class) {
             case CubeMap::class:
-                return new Box(512, 512);
+                return new Box(1024, 1024);
             case Equirectangular::class:
-                return new Box(1024, 512);
+                return new Box(2048, 1024);
             default:
                 return null;
         }
