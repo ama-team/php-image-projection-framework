@@ -8,6 +8,9 @@ use AmaTeam\Image\Projection\API\Conversion\ProcessorInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\API\Type\GeneratorInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Single-run conversion processing that encapsulates all userspace handlers.
@@ -30,17 +33,24 @@ class Conversion implements ConversionInterface
      * @var ProcessorInterface[][]
      */
     private $processors = [];
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param SpecificationInterface $target
      * @param GeneratorInterface $generator
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         SpecificationInterface $target,
-        GeneratorInterface $generator
+        GeneratorInterface $generator,
+        LoggerInterface $logger = null
     ) {
         $this->target = $target;
         $this->generator = $generator;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -50,6 +60,8 @@ class Conversion implements ConversionInterface
     public function run()
     {
         foreach ($this->generator as $tile) {
+            $context = ['tile' => $tile->getPosition()];
+            $this->logger->debug('Generated tile {tile}', $context);
             $this->applyProcessors($tile, $this->target);
             $this->notifyListeners($tile, $this->target);
         }
@@ -65,6 +77,12 @@ class Conversion implements ConversionInterface
     ) {
         foreach ($this->processors as $processors) {
             foreach ($processors as $processor) {
+                $context = [
+                    'tile' => $tile->getPosition(),
+                    'processor' => $processor
+                ];
+                $template = 'Applying processor {processor} to tile {tile}';
+                $this->logger->debug($template, $context);
                 $processor->process($tile, $specification);
             }
         }
@@ -79,6 +97,12 @@ class Conversion implements ConversionInterface
         SpecificationInterface $specification
     ) {
         foreach ($this->listeners as $listener) {
+            $context = [
+                'tile' => $tile->getPosition(),
+                'listener' => $listener
+            ];
+            $template = 'Applying listener {listener} to tile {tile}';
+            $this->logger->debug($template, $context);
             $listener->accept($tile, $specification);
         }
     }
@@ -94,6 +118,9 @@ class Conversion implements ConversionInterface
      */
     public function addProcessor(ProcessorInterface $processor, $order = 0)
     {
+        if ($processor instanceof LoggerAwareInterface) {
+            $processor->setLogger($this->logger);
+        }
         if (!$this->processors[$order]) {
             $this->processors[$order] = [];
         }
@@ -108,6 +135,9 @@ class Conversion implements ConversionInterface
      */
     public function addListener(ListenerInterface $listener)
     {
+        if ($listener instanceof LoggerAwareInterface) {
+            $listener->setLogger($this->logger);
+        }
         $this->listeners[] = $listener;
         return $this;
     }

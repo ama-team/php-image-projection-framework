@@ -20,15 +20,21 @@ use Codeception\Test\Unit;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Debug\BufferingLogger;
 use Yandex\Allure\Adapter\Allure;
 use Yandex\Allure\Adapter\Event\AddParameterEvent;
 use Yandex\Allure\Adapter\Model\ParameterKind;
+use Yandex\Allure\Adapter\Support\AttachmentSupport;
 use Yandex\Allure\Adapter\Support\StepSupport;
 
 class ConversionTest extends Unit
 {
     use StepSupport;
+    use AttachmentSupport;
 
     /**
      * @var Framework
@@ -50,16 +56,43 @@ class ConversionTest extends Unit
      * @var TileAttachmentListener
      */
     private $attachmentListener;
+    /**
+     * @var BufferingLogger
+     */
+    private $logger;
+    /**
+     * @var TestHandler
+     */
+    private $buffer;
 
     protected function _before()
     {
+        $this->buffer = new TestHandler();
+        $this->logger = new Logger(
+            'runtime.log',
+            [$this->buffer],
+            [new PsrLogMessageProcessor()]
+        );
         $adapter = new Local(Structure::getProjectRoot());
         $this->filesystem = new Filesystem($adapter);
-        $registry = (new Registry($this->filesystem))->registerDefaultTypes();
-        $this->framework = new Framework($registry);
+        $registry = (new Registry($this->filesystem, null, $this->logger));
+        $registry->registerDefaultTypes();
+        $this->framework = new Framework($registry, $this->logger);
         $this->imageManager = new ImageManager($this->filesystem, Discovery::find());
         $this->loader = new Loader($this->imageManager, $this->filesystem);
         $this->attachmentListener = new TileAttachmentListener();
+    }
+
+    protected function _after()
+    {
+        $lines = array_map(function ($entry) {
+            return $entry['message'];
+        }, $this->buffer->getRecords());
+        $content = implode("\r\n", $lines);
+        $filesystem = new \Symfony\Component\Filesystem\Filesystem();
+        $target = $filesystem->tempnam(sys_get_temp_dir(), 'pf-');
+        $filesystem->dumpFile($target, $content);
+        $this->addAttachment($target, 'runtime.log', 'text/plain');
     }
 
     public function dataProvider()
