@@ -33,7 +33,8 @@
     "league/flysystem-vfs": "^1.0",
     "symfony/serializer": "^3.3",
     "php-coveralls/php-coveralls": "^1.0",
-    "symfony/property-access": "^3.3"
+    "symfony/property-access": "^3.3",
+    "monolog/monolog": "^1.23"
   },
   "suggest": {
     "ext/gd": "Preferred image processing backend",

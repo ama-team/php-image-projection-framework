@@ -7,6 +7,8 @@ use AmaTeam\Image\Projection\Filesystem\Locator;
 use AmaTeam\Image\Projection\Filesystem\Pattern;
 use AmaTeam\Image\Projection\Image\Manager;
 use League\Flysystem\FilesystemInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Loads tiles from filesystem by specified pattern.
@@ -22,17 +24,24 @@ class Loader
      * @var Locator
      */
     private $locator;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Manager $manager
      * @param FilesystemInterface $filesystem
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         Manager $manager,
-        FilesystemInterface $filesystem
+        FilesystemInterface $filesystem,
+        LoggerInterface $logger = null
     ) {
         $this->manager = $manager;
         $this->locator = new Locator($filesystem);
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -41,9 +50,14 @@ class Loader
      */
     public function load(Pattern $pattern)
     {
-        return array_map(function ($entry) {
+        $context = ['pattern' => $pattern];
+        $this->logger->debug('Loading tiles by pattern {pattern}', $context);
+        $tiles = array_map(function ($entry) {
             return $this->createTile($entry['path'], $entry['parameters']);
         }, $this->locator->locate($pattern));
+        $context = ['amount' => sizeof($tiles)];
+        $this->logger->debug('Loaded {amount} tiles', $context);
+        return $tiles;
     }
 
     /**
@@ -58,9 +72,17 @@ class Loader
         $defaultFace = MappingInterface::DEFAULT_FACE;
         $face = self::lookup($parameters, ['face', 'f'], $defaultFace);
         $position = new Position($face, $x, $y);
+        $context = ['position' => $position];
+        $this->logger->debug('Loading tile {position}', $context);
         return new Tile($path, $position, $this->manager);
     }
 
+    /**
+     * @param string[] $source
+     * @param string[] $names
+     * @param mixed $default
+     * @return string|mixed
+     */
     private static function lookup(array $source, array $names, $default = null)
     {
         foreach ($names as $name) {

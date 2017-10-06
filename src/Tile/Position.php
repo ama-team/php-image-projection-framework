@@ -105,7 +105,7 @@ class Position implements PositionInterface
 
     public function __toString()
     {
-        $pattern = 'Position {face: %s, x: %s, y: %s}';
+        $pattern = '{face: %s, x: %s, y: %s}';
         return sprintf($pattern, $this->face, $this->x, $this->y);
     }
 }

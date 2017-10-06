@@ -44,7 +44,7 @@ class Framework implements FrameworkInterface
         }
         $this->registry = $registry;
         $this->logger = $logger;
-        $this->converter = new Converter($registry);
+        $this->converter = new Converter($registry, $logger);
     }
 
     /**
@@ -102,7 +102,7 @@ class Framework implements FrameworkInterface
         $format,
         EncodingOptions $options = null
     ) {
-        $listener = new SaveListener($format, $options);
+        $listener = new SaveListener($format, $options, $this->logger);
         $conversion->addListener($listener);
         $conversion->run();
     }

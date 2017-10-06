@@ -14,7 +14,12 @@ use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 use BadMethodCallException;
 use League\Flysystem\FilesystemInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 abstract class AbstractHandler implements HandlerInterface
 {
     /**
@@ -25,17 +30,24 @@ abstract class AbstractHandler implements HandlerInterface
      * @var FilesystemInterface
      */
     private $filesystem;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param FilesystemInterface $filesystem
      * @param Manager $imageManager
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         FilesystemInterface $filesystem,
-        Manager $imageManager
+        Manager $imageManager,
+        LoggerInterface $logger = null
     ) {
         $this->filesystem = $filesystem;
         $this->imageManager = $imageManager;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -78,12 +90,12 @@ abstract class AbstractHandler implements HandlerInterface
             throw new BadMethodCallException($message);
         }
         $mapping = $this->createMapping($target->getSize());
+        $context = ['target' => $target,];
+        $this->logger->debug('Creating tile generator for {target}', $context);
         return new DefaultGenerator(
             $this->imageManager,
-            $source,
-            $target,
-            $mapping,
-            $filters
+            new GenerationDetails($source, $mapping, $target, $filters),
+            $this->logger
         );
     }
 

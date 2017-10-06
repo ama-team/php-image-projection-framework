@@ -11,6 +11,7 @@ use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\API\Type\GeneratorInterface;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
+use Psr\Log\LoggerInterface;
 
 class DefaultGenerator implements GeneratorInterface
 {
@@ -62,27 +63,28 @@ class DefaultGenerator implements GeneratorInterface
      * @var PositionInterface
      */
     private $key;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Manager $imageManager
-     * @param ReaderInterface $reader
-     * @param MappingInterface $mapping
-     * @param SpecificationInterface $target
-     * @param FilterInterface[] $filters
+     * @param GenerationDetails $details
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Manager $imageManager,
-        ReaderInterface $reader,
-        SpecificationInterface $target,
-        MappingInterface $mapping,
-        array $filters = []
+        GenerationDetails $details,
+        LoggerInterface $logger = null
     ) {
         $this->imageManager = $imageManager;
-        $this->reader = $reader;
-        $this->mapping = $mapping;
-        $this->target = $target;
-        $this->faces = $mapping->getFaces();
-        $this->filters = $filters;
+        $this->reader = $details->getSource();
+        $this->mapping = $details->getMapping();
+        $this->target = $details->getSpecification();
+        $this->faces = $this->mapping->getFaces();
+        $this->filters = $details->getFilters();
+        $this->logger = $logger;
         $this->toFirstAllowedKey();
     }
 
@@ -198,6 +200,8 @@ class DefaultGenerator implements GeneratorInterface
     private function toFirstAllowedKey()
     {
         while ($this->valid() && !$this->allowed($this->key(), $this->target)) {
+            $message = 'Current tile {position} is filtered, skipping';
+            $this->logger->debug($message, ['position' => $this->key()]);
             $this->nextInternal();
         }
     }

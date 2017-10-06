@@ -12,11 +12,15 @@ use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\Type\DefaultGenerator;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
+use AmaTeam\Image\Projection\Type\GenerationDetails;
 use Codeception\Test\Unit;
 use Iterator;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 
-class GeneratorTest extends Unit
+/**
+ * TODO: add filters test
+ */
+class DefaultGeneratorTest extends Unit
 {
     const SECOND_FACE = 'second';
 
@@ -102,11 +106,14 @@ class GeneratorTest extends Unit
 
     private function createGenerator()
     {
+        $details = new GenerationDetails(
+            $this->reader,
+            $this->mapping,
+            $this->target
+        );
         return new DefaultGenerator(
             $this->imageManager,
-            $this->reader,
-            $this->target,
-            $this->mapping
+            $details
         );
     }
 

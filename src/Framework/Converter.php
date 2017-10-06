@@ -7,6 +7,8 @@ use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
 use AmaTeam\Image\Projection\Type\Registry;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class Converter implements ConverterInterface
 {
@@ -14,13 +16,21 @@ class Converter implements ConverterInterface
      * @var Registry
      */
     private $registry;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Registry $registry
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(Registry $registry)
-    {
+    public function __construct(
+        Registry $registry,
+        LoggerInterface $logger = null
+    ) {
         $this->registry = $registry;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     /**
@@ -34,6 +44,9 @@ class Converter implements ConverterInterface
         array $targets,
         ...$filters
     ) {
+        $context = ['source' => $source, 'targets' => $targets];
+        $message = 'Converting {source} to targets {targets}';
+        $this->logger->debug($message, $context);
         $reader = $this->getReader($source);
         $pipelines = [];
         foreach ($targets as $target) {
@@ -56,6 +69,9 @@ class Converter implements ConverterInterface
         SpecificationInterface $target,
         ...$filters
     ) {
+        $context = ['source' => $source, 'target' => $target];
+        $message = 'Converting {source} to target {target}';
+        $this->logger->debug($message, $context);
         $reader = $this->getReader($source);
         return $this->instantiateConversion($reader, $target, $filters);
     }
@@ -87,6 +103,6 @@ class Converter implements ConverterInterface
             ->registry
             ->getHandler($target->getType())
             ->createGenerator($source, $target, $filters);
-        return new Conversion($target, $generator);
+        return new Conversion($target, $generator, $this->logger);
     }
 }
