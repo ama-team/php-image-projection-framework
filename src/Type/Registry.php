@@ -75,14 +75,8 @@ class Registry
         if (isset($this->registry[$type])) {
             return $this->registry[$type];
         }
-        $type = self::normalizeType($type);
-        foreach (array_keys($this->registry) as $key) {
-            $normalized = self::normalizeType($key);
-            if (strpos($normalized, $type) === 0) {
-                return $this->registry[$key];
-            }
-        }
-        return null;
+        $type = $this->findType($type);
+        return $type ? $this->registry[$type] : null;
     }
 
     /**
@@ -104,6 +98,9 @@ class Registry
      */
     public function findType($type)
     {
+        if (isset($this->registry[$type])) {
+            return $type;
+        }
         $type = self::normalizeType($type);
         foreach (array_keys($this->registry) as $key) {
             $normalized = self::normalizeType($key);

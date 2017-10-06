@@ -19,7 +19,7 @@ interface ConverterInterface
     /**
      * @param SpecificationInterface $source
      * @param Specification[] $targets
-     * @return ConversionInterface
+     * @return ConversionInterface[]
      */
     public function createConversions(
         SpecificationInterface $source,

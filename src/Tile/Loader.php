@@ -53,8 +53,8 @@ class Loader
      */
     private function createTile($path, array $parameters)
     {
-        $x = self::lookup($parameters, ['x', 'h'], 0);
-        $y = self::lookup($parameters, ['y', 'v'], 0);
+        $x = (int) self::lookup($parameters, ['x', 'h'], 0);
+        $y = (int) self::lookup($parameters, ['y', 'v'], 0);
         $defaultFace = MappingInterface::DEFAULT_FACE;
         $face = self::lookup($parameters, ['face', 'f'], $defaultFace);
         $position = new Position($face, $x, $y);
