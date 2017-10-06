@@ -2,6 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Tile;
 
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\Filesystem\Locator;
 use AmaTeam\Image\Projection\Filesystem\Pattern;
@@ -46,7 +47,7 @@ class Loader
 
     /**
      * @param Pattern $pattern
-     * @return Tile[]
+     * @return TileInterface[]
      */
     public function load(Pattern $pattern)
     {
@@ -63,7 +64,7 @@ class Loader
     /**
      * @param string $path
      * @param string[] $parameters
-     * @return Tile
+     * @return TileInterface
      */
     private function createTile($path, array $parameters)
     {
@@ -74,7 +75,7 @@ class Loader
         $position = new Position($face, $x, $y);
         $context = ['position' => $position];
         $this->logger->debug('Loading tile {position}', $context);
-        return new Tile($path, $position, $this->manager);
+        return new Tile($position, $this->manager->read($path));
     }
 
     /**

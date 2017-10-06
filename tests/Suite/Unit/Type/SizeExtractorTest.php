@@ -2,10 +2,10 @@
 
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Test\Support\Assert;
-use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\Type\SizeExtractor;
 use Codeception\Test\Unit;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
@@ -34,7 +34,7 @@ class SizeExtractorTest extends Unit
             $row = [];
             for ($x = 0; $x < $columns; $x++) {
                 /** @var Mock $mock */
-                $mock = $this->createMock(Tile::class);
+                $mock = $this->createMock(TileInterface::class);
                 $mock
                     ->expects($this->any())
                     ->method('getImage')

@@ -57,6 +57,10 @@ class ConversionTest extends Unit
      */
     private $attachmentListener;
     /**
+     * @var SaveListener
+     */
+    private $saveListener;
+    /**
      * @var BufferingLogger
      */
     private $logger;
@@ -81,6 +85,7 @@ class ConversionTest extends Unit
         $this->imageManager = new ImageManager($this->filesystem, Discovery::find());
         $this->loader = new Loader($this->imageManager, $this->filesystem);
         $this->attachmentListener = new TileAttachmentListener();
+        $this->saveListener = new SaveListener($registry->getFilesystem());
     }
 
     protected function _after()
@@ -155,7 +160,7 @@ class ConversionTest extends Unit
                 ->getConverter()
                 ->createConversion($source, $encoded)
                 ->addListener($this->attachmentListener)
-                ->addListener(new SaveListener())
+                ->addListener($this->saveListener)
                 ->run();
         });
         $decoded = (new Specification())
@@ -168,7 +173,7 @@ class ConversionTest extends Unit
                 ->getConverter()
                 ->createConversion($encoded, $decoded)
                 ->addListener($this->attachmentListener)
-                ->addListener(new SaveListener())
+                ->addListener($this->saveListener)
                 ->run();
         });
         // TODO: compare resulting images

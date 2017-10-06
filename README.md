@@ -172,10 +172,11 @@ $conversion = $framework
 
 Last thing to mention is listeners - those are simply some side-effect
 generators that accept fully generated tiles. The most common example
-is SaveListener that is not included by default:
+is SaveListener that is not included in conversion by default:
 
 ```php
-$listener = new SaveListener(Format::JPEG);
+$filesystem = $framework->getRegistry()->getFilesystem();
+$listener = new SaveListener($filessytem, Format::JPEG);
 $conversion = $framework
     ->getConverter()
     ->createConversion($source, $target)

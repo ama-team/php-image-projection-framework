@@ -4,22 +4,13 @@ namespace AmaTeam\Image\Projection\Tile;
 
 use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\API\Tile\PositionInterface;
-use AmaTeam\Image\Projection\Image\EncodingOptions;
-use AmaTeam\Image\Projection\Image\Manager;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 
 /**
  * Represents single tile - rectangular projection chunk.
  */
-class Tile
+class Tile implements TileInterface
 {
-    /**
-     * @var string
-     */
-    private $path;
-    /**
-     * @var Manager
-     */
-    private $manager;
     /**
      * @var PositionInterface
      */
@@ -30,40 +21,20 @@ class Tile
     private $image;
 
     /**
-     * @param string $path
      * @param PositionInterface $position
-     * @param Manager $manager
+     * @param ImageInterface $image
      */
     public function __construct(
-        $path,
         PositionInterface $position,
-        Manager $manager
+        ImageInterface $image
     ) {
-        $this->path = $path;
-        $this->manager = $manager;
         $this->position = $position;
+        $this->image = $image;
     }
 
     public function getImage()
     {
-        if (!$this->image) {
-            $this->image = $this->manager->read($this->path);
-        }
         return $this->image;
-    }
-
-    public function createImage($width, $height)
-    {
-        $this->image = $this->manager->create($width, $height);
-        return $this->image;
-    }
-
-    public function persist($format, EncodingOptions $options = null)
-    {
-        if ($this->image) {
-            $this->manager->save($this->image, $this->path, $format, $options);
-        }
-        return $this;
     }
 
     /**
@@ -75,19 +46,11 @@ class Tile
     }
 
     /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
      * Converts single level tiles array into three level tree
      * (face -> rows -> columns).
      *
-     * @param Tile[] $tiles
-     * @return Tile[][][]
+     * @param TileInterface[] $tiles
+     * @return TileInterface[][][]
      */
     public static function treeify(array $tiles)
     {
@@ -102,23 +65,6 @@ class Tile
                 $cursor = &$cursor[$segment];
             }
             $cursor[$position->getX()] = $tile;
-        }
-        return $target;
-    }
-
-    /**
-     * @param Tile[][][] $tree
-     * @return Tile[]
-     */
-    public static function flatten(array $tree)
-    {
-        $target = [];
-        foreach ($tree as $face) {
-            foreach ($face as $row) {
-                foreach ($row as $tile) {
-                    $target[] = $tile;
-                }
-            }
         }
         return $target;
     }

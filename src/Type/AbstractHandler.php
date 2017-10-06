@@ -3,6 +3,7 @@
 namespace AmaTeam\Image\Projection\Type;
 
 use AmaTeam\Image\Projection\API\SpecificationInterface;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\API\Type\ValidatingMappingInterface;
 use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
 use AmaTeam\Image\Projection\Geometry\Box;
@@ -107,7 +108,7 @@ abstract class AbstractHandler implements HandlerInterface
 
     /**
      * @param MappingInterface $mapping
-     * @param Tile[][][] $tiles
+     * @param TileInterface[][][] $tiles
      * @param Box $tileSize
      * @return ReaderInterface
      */

@@ -6,7 +6,7 @@ use AmaTeam\Image\Projection\API\ConversionInterface;
 use AmaTeam\Image\Projection\API\Conversion\ListenerInterface;
 use AmaTeam\Image\Projection\API\Conversion\ProcessorInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
-use AmaTeam\Image\Projection\Tile\Tile;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\API\Type\GeneratorInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -68,11 +68,11 @@ class Conversion implements ConversionInterface
     }
 
     /**
-     * @param Tile $tile
+     * @param TileInterface $tile
      * @param SpecificationInterface $specification
      */
     private function applyProcessors(
-        Tile $tile,
+        TileInterface $tile,
         SpecificationInterface $specification
     ) {
         foreach ($this->processors as $processors) {
@@ -89,11 +89,11 @@ class Conversion implements ConversionInterface
     }
 
     /**
-     * @param Tile $tile
+     * @param TileInterface $tile
      * @param SpecificationInterface $specification
      */
     private function notifyListeners(
-        Tile $tile,
+        TileInterface $tile,
         SpecificationInterface $specification
     ) {
         foreach ($this->listeners as $listener) {

@@ -3,10 +3,10 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Framework\Validation\Tile;
 
 use AmaTeam\Image\Projection\API\Image\ImageInterface;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Framework\Validation\Tile\SingleTileValidator;
 use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Tile\Tile;
 use Codeception\Test\Unit;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 
@@ -81,8 +81,8 @@ class SingleTileValidatorTest extends Unit
             ->expects($this->any())
             ->method('getWidth')
             ->willReturn($width);
-        /** @var Tile|Mock $mock */
-        $mock = $this->createMock(Tile::class);
+        /** @var TileInterface|Mock $mock */
+        $mock = $this->createMock(TileInterface::class);
         $mock
             ->expects($this->any())
             ->method('getImage')

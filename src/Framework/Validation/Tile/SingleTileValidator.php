@@ -2,10 +2,10 @@
 
 namespace AmaTeam\Image\Projection\Framework\Validation\Tile;
 
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
 use AmaTeam\Image\Projection\Framework\Validation\ValidatorInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Tile\Tile;
 
 class SingleTileValidator implements ValidatorInterface
 {
@@ -27,7 +27,7 @@ class SingleTileValidator implements ValidatorInterface
      */
     public function validate($value, array $path = [])
     {
-        if (!($value instanceof Tile)) {
+        if (!($value instanceof TileInterface)) {
             throw new ValidationException('Value is not a Tile', $path);
         }
         if (!$this->size) {
