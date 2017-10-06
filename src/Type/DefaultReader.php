@@ -2,8 +2,8 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
 
@@ -14,7 +14,7 @@ class DefaultReader implements ReaderInterface
      */
     private $mapping;
     /**
-     * @var Tile[][][]
+     * @var TileInterface[][][]
      */
     private $tiles;
     /**
@@ -28,7 +28,7 @@ class DefaultReader implements ReaderInterface
 
     /**
      * @param MappingInterface $mapping
-     * @param Tile[][][] $tiles
+     * @param TileInterface[][][] $tiles
      * @param Box $tileSize
      */
     public function __construct(

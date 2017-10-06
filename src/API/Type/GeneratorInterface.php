@@ -3,13 +3,13 @@
 namespace AmaTeam\Image\Projection\API\Type;
 
 use AmaTeam\Image\Projection\API\Tile\PositionInterface;
-use AmaTeam\Image\Projection\Tile\Tile;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use Iterator;
 
 interface GeneratorInterface extends Iterator
 {
     /**
-     * @return Tile
+     * @return TileInterface
      */
     public function current();
 

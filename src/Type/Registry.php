@@ -147,6 +147,22 @@ class Registry
     }
 
     /**
+     * @return FilesystemInterface
+     */
+    public function getFilesystem()
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getImageManager()
+    {
+        return $this->imageManager;
+    }
+
+    /**
      * Normalizes type name, removing non-word characters and casting
      * to lower case.
      *

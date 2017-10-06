@@ -5,6 +5,7 @@ namespace AmaTeam\Image\Projection\Type;
 use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\API\Tile\PositionInterface;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Tile\Position;
 use AmaTeam\Image\Projection\Tile\Tile;
@@ -56,7 +57,7 @@ class DefaultGenerator implements GeneratorInterface
 
 
     /**
-     * @var Tile
+     * @var TileInterface
      */
     private $cursor;
     /**
@@ -149,12 +150,9 @@ class DefaultGenerator implements GeneratorInterface
         $specification = $this->target;
         $faceName = $this->faces[$faceIndex];
         $position = $this->key();
-        $parameters = $position->toPatternParameters();
-        $path = $specification->getPattern()->resolve($parameters);
-        $tile = new Tile((string) $path, $position, $this->imageManager);
         $width = $specification->getTileSize()->getWidth();
         $height = $specification->getTileSize()->getHeight();
-        $image = $tile->createImage($width, $height);
+        $image = $this->imageManager->create($width, $height);
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
                 $coordinates = $this
@@ -166,7 +164,7 @@ class DefaultGenerator implements GeneratorInterface
                 $image->setColorAt($x, $y, $color);
             }
         }
-        return $tile;
+        return new Tile($position, $image);
     }
 
     private function allowed(

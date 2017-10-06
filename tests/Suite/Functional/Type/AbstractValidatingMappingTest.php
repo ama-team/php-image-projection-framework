@@ -3,10 +3,10 @@
 namespace AmaTeam\Image\Projection\Test\Suite\Functional\Type;
 
 use AmaTeam\Image\Projection\API\Image\ImageInterface;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Specification;
-use AmaTeam\Image\Projection\Tile\Tile;
 use AmaTeam\Image\Projection\Type\AbstractValidatingMapping;
 use Codeception\Test\Unit;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
@@ -188,9 +188,9 @@ class AbstractValidatingMappingTest extends Unit
         ];
         /** @var ImageInterface|Mock $image */
         $image = $this->createConfiguredMock(ImageInterface::class, $methods);
-        /** @var Tile|Mock $tile */
+        /** @var TileInterface|Mock $tile */
         $tileMethods = ['getImage' => $image];
-        $tile = $this->createConfiguredMock(Tile::class, $tileMethods);
+        $tile = $this->createConfiguredMock(TileInterface::class, $tileMethods);
         return $tile;
     }
 }

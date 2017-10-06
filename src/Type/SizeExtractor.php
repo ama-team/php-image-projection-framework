@@ -2,32 +2,32 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\Tile\Tile;
 
 class SizeExtractor
 {
     /**
-     * @param Tile[][] $tiles
+     * @param TileInterface[][] $face
      * @return Box|null
      */
-    public static function extractTileSize(array $tiles)
+    public static function extractTileSize(array $face)
     {
-        if (sizeof($tiles) === 0 || sizeof($tiles[0]) === 0) {
+        if (sizeof($face) === 0 || sizeof($face[0]) === 0) {
             return null;
         }
-        $image = $tiles[0][0]->getImage();
+        $image = $face[0][0]->getImage();
         return new Box($image->getWidth(), $image->getHeight());
     }
 
     /**
-     * @param Tile[][] $tiles
+     * @param TileInterface[][] $face
      * @return Box
      */
-    public static function extractSize(array $tiles)
+    public static function extractSize(array $face)
     {
-        $layout = self::calculateLayout($tiles);
-        $tileSize = self::extractTileSize($tiles);
+        $layout = self::calculateLayout($face);
+        $tileSize = self::extractTileSize($face);
         if (!$tileSize) {
             return null;
         }
@@ -38,13 +38,13 @@ class SizeExtractor
     }
 
     /**
-     * @param Tile[][] $tiles
+     * @param TileInterface[][] $face
      * @return Box
      */
-    public static function calculateLayout(array $tiles)
+    public static function calculateLayout(array $face)
     {
-        $rows = sizeof($tiles);
-        $columns = $rows === 0 ? 0 : sizeof($tiles[0]);
+        $rows = sizeof($face);
+        $columns = $rows === 0 ? 0 : sizeof($face[0]);
         return new Box($columns, $rows);
     }
 }

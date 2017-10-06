@@ -18,4 +18,11 @@ interface PositionInterface
      * @return int
      */
     public function getY();
+
+    /**
+     * TODO: extract this functionality to standalone processor / tile metadata
+     *
+     * @return string[]
+     */
+    public function toPatternParameters();
 }

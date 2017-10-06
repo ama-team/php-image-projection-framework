@@ -5,6 +5,7 @@ namespace AmaTeam\Image\Projection;
 use AmaTeam\Image\Projection\API\ConversionInterface;
 use AmaTeam\Image\Projection\API\ConverterInterface;
 use AmaTeam\Image\Projection\API\FrameworkInterface;
+use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Framework\Converter;
 use AmaTeam\Image\Projection\Conversion\Listener\SaveListener;
 use AmaTeam\Image\Projection\Image\EncodingOptions;
@@ -58,14 +59,14 @@ class Framework implements FrameworkInterface
     }
 
     /**
-     * @param Specification $source
-     * @param Specification $target
+     * @param SpecificationInterface $source
+     * @param SpecificationInterface $target
      * @param string $format
      * @param EncodingOptions $options
      */
     public function convert(
-        Specification $source,
-        Specification $target,
+        SpecificationInterface $source,
+        SpecificationInterface $target,
         $format = Format::JPEG,
         EncodingOptions $options = null
     ) {
@@ -74,13 +75,13 @@ class Framework implements FrameworkInterface
     }
 
     /**
-     * @param Specification $source
-     * @param Specification[] $targets
+     * @param SpecificationInterface $source
+     * @param SpecificationInterface[] $targets
      * @param string $format
      * @param EncodingOptions|null $options
      */
     public function convertAll(
-        Specification $source,
+        SpecificationInterface $source,
         array $targets,
         $format = Format::JPEG,
         EncodingOptions $options = null
@@ -102,7 +103,13 @@ class Framework implements FrameworkInterface
         $format,
         EncodingOptions $options = null
     ) {
-        $listener = new SaveListener($format, $options, $this->logger);
+        $filesystem = $this->registry->getFilesystem();
+        $listener = new SaveListener(
+            $filesystem,
+            $format,
+            $options,
+            $this->logger
+        );
         $conversion->addListener($listener);
         $conversion->run();
     }

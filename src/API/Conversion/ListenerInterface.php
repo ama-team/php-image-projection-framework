@@ -3,7 +3,7 @@
 namespace AmaTeam\Image\Projection\API\Conversion;
 
 use AmaTeam\Image\Projection\API\SpecificationInterface;
-use AmaTeam\Image\Projection\Tile\Tile;
+use AmaTeam\Image\Projection\API\Tile\TileInterface;
 
 /**
  * Listeners allows to receive tile and create some side effect based on it -
@@ -12,9 +12,12 @@ use AmaTeam\Image\Projection\Tile\Tile;
 interface ListenerInterface
 {
     /**
-     * @param Tile $tile
+     * @param TileInterface $tile
      * @param SpecificationInterface $specification
      * @return void
      */
-    public function accept(Tile $tile, SpecificationInterface $specification);
+    public function accept(
+        TileInterface $tile,
+        SpecificationInterface $specification
+    );
 }

@@ -4,33 +4,32 @@ namespace AmaTeam\Image\Projection\API;
 
 use AmaTeam\Image\Projection\Image\EncodingOptions;
 use AmaTeam\Image\Projection\API\Image\Format;
-use AmaTeam\Image\Projection\Specification;
 
 interface FrameworkInterface
 {
     /**
-     * @param Specification $source
-     * @param Specification $target
+     * @param SpecificationInterface $source
+     * @param SpecificationInterface $target
      * @param string $format
      * @param EncodingOptions|null $options
      * @return void
      */
     public function convert(
-        Specification $source,
-        Specification $target,
+        SpecificationInterface $source,
+        SpecificationInterface $target,
         $format = Format::JPEG,
         EncodingOptions $options = null
     );
 
     /**
-     * @param Specification $source
-     * @param Specification[] $targets
+     * @param SpecificationInterface $source
+     * @param SpecificationInterface[] $targets
      * @param string $format
      * @param EncodingOptions|null $options
      * @return void
      */
     public function convertAll(
-        Specification $source,
+        SpecificationInterface $source,
         array $targets,
         $format = Format::JPEG,
         EncodingOptions $options = null
