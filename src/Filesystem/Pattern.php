@@ -124,6 +124,9 @@ class Pattern
         });
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private static function createChunk($segment)
     {
         return new Chunk($segment);

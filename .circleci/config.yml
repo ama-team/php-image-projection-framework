@@ -83,8 +83,7 @@ jobs:
           command: bin/robo test:setup
       - run:
           name: Lint
-          # todo: don't forget to enable it when PHPMD ruleset will be finished
-          command: 'bin/robo lint || :'
+          command: bin/robo lint
       - run: 
           name: 'Test: Unit'
           command: bin/robo test:unit --coverage

@@ -30,6 +30,8 @@ class TileTreeValidator implements ValidatorInterface
 
     /**
      * @inheritDoc
+     *
+     * @SuppressWarnings(PHPMD.ElseExpression)
      */
     public function validate($value, array $path = [])
     {

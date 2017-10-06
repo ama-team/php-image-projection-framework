@@ -28,9 +28,9 @@ class Vector
     public static function create($latitude, $longitude, $maxLength = null)
     {
         $z = sin($latitude);
-        $xy = cos($latitude);
-        $x = cos($longitude) * $xy;
-        $y = sin($longitude) * $xy;
+        $xyHypotenuse = cos($latitude);
+        $x = cos($longitude) * $xyHypotenuse;
+        $y = sin($longitude) * $xyHypotenuse;
         // todo possible optimizations
         $multiplier = $maxLength === null ? 1 : $maxLength / max(abs($x), abs($y), abs($z));
         return [$x * $multiplier, $y * $multiplier, $z * $multiplier];
