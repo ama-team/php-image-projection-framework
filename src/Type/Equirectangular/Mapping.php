@@ -3,13 +3,13 @@
 namespace AmaTeam\Image\Projection\Type\Equirectangular;
 
 use AmaTeam\Image\Projection\Geometry\Box;
-use AmaTeam\Image\Projection\API\Type\MappingInterface;
+use AmaTeam\Image\Projection\Type\AbstractValidatingMapping;
 use InvalidArgumentException;
 
 /**
  * This class maps coordinates to points and vice versa.
  */
-class Mapping implements MappingInterface
+class Mapping extends AbstractValidatingMapping
 {
     /**
      * @var int
