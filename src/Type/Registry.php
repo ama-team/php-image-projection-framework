@@ -85,16 +85,23 @@ class Registry
         return null;
     }
 
+    /**
+     * Checks if handler exists.
+     *
+     * @param string $type
+     * @return bool
+     */
     public function exists($type)
     {
         return $this->findHandler($type) !== null;
     }
 
-    public function normalizeType($type)
-    {
-        return preg_replace('/\W/', '', strtolower($type));
-    }
-
+    /**
+     * Finds and returns correct type name by passed string or just null.
+     *
+     * @param string|$type
+     * @return string|null
+     */
     public function findType($type)
     {
         $type = self::normalizeType($type);
@@ -140,5 +147,17 @@ class Registry
             new CubeMapHandler($this->filesystem, $this->imageManager)
         );
         return $this;
+    }
+
+    /**
+     * Normalizes type name, removing non-word characters and casting
+     * to lower case.
+     *
+     * @param string $type
+     * @return string
+     */
+    public static function normalizeType($type)
+    {
+        return preg_replace('/\W/', '', strtolower($type));
     }
 }
