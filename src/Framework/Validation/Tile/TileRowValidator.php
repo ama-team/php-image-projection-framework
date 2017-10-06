@@ -24,6 +24,8 @@ class TileRowValidator implements ValidatorInterface
      * @param int|null $size
      * @param bool $allowedEmpty
      * @param ValidatorInterface|null $tileValidator
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(
         $size = null,

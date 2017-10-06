@@ -2,6 +2,9 @@
 
 use AmaTeam\Image\Projection\Test\Support\Fixture\Projection\Manager;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class RoboFile extends \Robo\Tasks // NOSONAR
 {
     const COVERAGE_OPTION = 'coverage';
@@ -141,14 +144,8 @@ class RoboFile extends \Robo\Tasks // NOSONAR
 
     public function lint()
     {
-        $rules = [
-            'cleancode',
-            'codesize',
-            'controversial',
-            'design',
-            'naming',
-            'unusedcode'
-        ];
+        $rules = self::path(['res', 'phpmd', 'rules.xml']);
+        $mdBinary = self::binary('phpmd');
         $commands = [
             [
                 self::binary('phpcs'),
@@ -156,12 +153,18 @@ class RoboFile extends \Robo\Tasks // NOSONAR
                 self::sourcesDir()
             ],
             [
-                self::binary('phpmd'),
+                $mdBinary,
                 self::sourcesDir(),
                 'html',
-                implode(',', $rules),
+                $rules,
                 '--reportfile',
                 self::testsReportDir(['Lint', 'phpmd.html'])
+            ],
+            [
+                $mdBinary,
+                self::sourcesDir(),
+                'text',
+                $rules,
             ]
         ];
         $this

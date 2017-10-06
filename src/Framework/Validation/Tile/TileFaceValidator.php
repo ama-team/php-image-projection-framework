@@ -24,6 +24,8 @@ class TileFaceValidator implements ValidatorInterface
      * @param int|null $height
      * @param bool $allowedEmpty
      * @param ValidatorInterface|null $rowValidator
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(
         $height = null,
