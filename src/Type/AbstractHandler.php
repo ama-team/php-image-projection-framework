@@ -4,6 +4,7 @@ namespace AmaTeam\Image\Projection\Type;
 
 use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\API\Type\ValidatingMappingInterface;
+use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
 use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Tile\Loader;
@@ -53,6 +54,9 @@ abstract class AbstractHandler implements HandlerInterface
         $face = reset($tree);
         $tileSize = $specification->getTileSize();
         $tileSize = $tileSize ?: SizeExtractor::extractTileSize($face);
+        if (!$tileSize) {
+            throw new ValidationException('Could not compute tile size');
+        }
         $size = $specification->getSize() ?: SizeExtractor::extractSize($face);
         $mapping = $this->createMapping($size);
         if ($mapping instanceof ValidatingMappingInterface) {

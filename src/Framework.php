@@ -2,6 +2,7 @@
 
 namespace AmaTeam\Image\Projection;
 
+use AmaTeam\Image\Projection\API\ConversionInterface;
 use AmaTeam\Image\Projection\API\ConverterInterface;
 use AmaTeam\Image\Projection\API\FrameworkInterface;
 use AmaTeam\Image\Projection\Framework\Converter;
@@ -68,10 +69,8 @@ class Framework implements FrameworkInterface
         $format = Format::JPEG,
         EncodingOptions $options = null
     ) {
-        $persistenceListener = new SaveListener($format, $options);
-        $pipeline = $this->converter->createConversion($source, $target);
-        $pipeline->addListener($persistenceListener);
-        $pipeline->run();
+        $conversion = $this->converter->createConversion($source, $target);
+        $this->processConversion($conversion, $format, $options);
     }
 
     /**
@@ -86,12 +85,26 @@ class Framework implements FrameworkInterface
         $format = Format::JPEG,
         EncodingOptions $options = null
     ) {
-        $pipelines = $this->converter->createConversions($source, $targets);
-        $listener = new SaveListener($format, $options);
-        foreach ($pipelines as $pipeline) {
-            $pipeline->addListener($listener);
-            $pipeline->run();
+        $conversions = $this->converter->createConversions($source, $targets);
+        foreach ($conversions as $conversion) {
+            $this->processConversion($conversion, $format, $options);
         }
+    }
+
+    /**
+     * @param ConversionInterface $conversion
+     * @param string $format
+     * @param EncodingOptions $options
+     * @return void
+     */
+    private function processConversion(
+        ConversionInterface $conversion,
+        $format,
+        EncodingOptions $options = null
+    ) {
+        $listener = new SaveListener($format, $options);
+        $conversion->addListener($listener);
+        $conversion->run();
     }
 
     /**

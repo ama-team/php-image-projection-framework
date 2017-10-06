@@ -22,7 +22,7 @@ class Vector
     /**
      * @param float $latitude
      * @param float $longitude
-     * @param int $maxLength
+     * @param float $maxLength
      * @return float[] Array of [x, y, z] in [-1..1] range
      */
     public static function create($latitude, $longitude, $maxLength = null)

@@ -14,6 +14,10 @@ class Pattern
      * @var Chunk[]
      */
     private $chunks;
+    /**
+     * @var int
+     */
+    private $length;
 
     /**
      * @param string $pattern
@@ -23,6 +27,7 @@ class Pattern
         $this->source = $pattern;
         $segments = self::split($pattern);
         $this->chunks = array_map([__CLASS__, 'createChunk'], $segments);
+        $this->length = sizeof($segments);
     }
 
     /**
@@ -35,7 +40,7 @@ class Pattern
         if (sizeof($segments) !== sizeof($this->chunks)) {
             return false;
         }
-        for ($i = 0; $i < sizeof($this->chunks); $i++) {
+        for ($i = 0; $i < $this->length; $i++) {
             if (!$this->chunks[$i]->matches($segments[$i])) {
                 return false;
             }
@@ -50,11 +55,11 @@ class Pattern
     public function getParameters($path)
     {
         $segments = self::split($path);
-        if (sizeof($segments) !== sizeof($this->chunks)) {
+        if (sizeof($segments) !== $this->length) {
             return [];
         }
         $parameters = [];
-        for ($i = 0; $i < sizeof($this->chunks); $i++) {
+        for ($i = 0; $i < $this->length; $i++) {
             $parameters = array_merge(
                 $parameters,
                 $this->chunks[$i]->getParameters($segments[$i])
