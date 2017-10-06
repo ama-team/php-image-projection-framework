@@ -39,7 +39,7 @@ $target = new Specification(
     'cube',
     'static/pano/{f}/{x}/{y}.jpg',
     new Box(512, 512) // tile size,
-    new Box(2, 2) // layout, amount of tiles horiaontally and vertically
+    new Box(2, 2) // layout, amount of tiles horizontally and vertically
 );
 
 $options = (new EncodingOptions())->setQuality(0.9);
@@ -68,10 +68,12 @@ done using `#convertAll()`, which uses single reader:
 ```php
 $targets = array_map(function ($index) {
     $side = 256 * (int) pow($index, 2);
-    $size = new Box($side, $side);
-    $tileSize = new Box(min($side, 512), min($side, 512));
+    $tileSide = min($side, 512);
+    $size = $side / $side;
+    $tileSize = new Box($tileSide, $tileSide);
+    $layout = new Box($size, $size);
     $path = sprintf('static/pano/%d/{f}/{x}/{y}.jpg', $index);
-    return new Specification('cube', $path, $size, $tileSize);
+    return new Specification('cube', $path, $tileSize, $layout);
 }, range(0, 3));
 
 $framework->convertAll($source, $targets);
@@ -176,7 +178,7 @@ is SaveListener that is not included in conversion by default:
 
 ```php
 $filesystem = $framework->getRegistry()->getFilesystem();
-$listener = new SaveListener($filessytem, Format::JPEG);
+$listener = new SaveListener($filesystem, Format::JPEG);
 $conversion = $framework
     ->getConverter()
     ->createConversion($source, $target)
