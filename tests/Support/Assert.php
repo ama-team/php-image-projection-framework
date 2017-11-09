@@ -58,7 +58,7 @@ class Assert extends \PHPUnit\Framework\Assert
     {
         $components = ['red', 'green', 'blue', 'alpha'];
         for ($i = 0; $i < sizeof($components); $i++) {
-            $shift = 3 - $i;
+            $shift = (3 - $i) * 8;
             $expectedChannel = ($expected >> $shift) & 0xFF;
             $actualChannel = ($actual >> $shift) & 0xFF;
             if (abs($expectedChannel - $actualChannel) > $deviation) {

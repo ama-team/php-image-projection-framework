@@ -23,7 +23,8 @@ has been fed with
 - BilinearReader that produces smoother images in exchange for extra
 computing resources (previous reader has been renamed to 
 `NearestNeighbourReader`). It is used by default since nearest 
-neighbour algorithm doesn't provide any decent quality$.
+neighbour algorithm doesn't provide any decent quality.
+- FXAA processor
 
 ## [0.1.0] - 2017-10-06
 - Initial implementation with equirectangular and cube map projections
