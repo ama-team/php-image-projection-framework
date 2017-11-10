@@ -9,20 +9,24 @@ interface ConverterInterface
     /**
      * @param SpecificationInterface $source
      * @param SpecificationInterface $target
+     * @param ConversionOptionsInterface $options
      * @return ConversionInterface
      */
     public function createConversion(
         SpecificationInterface $source,
-        SpecificationInterface $target
+        SpecificationInterface $target,
+        ConversionOptionsInterface $options = null
     );
 
     /**
      * @param SpecificationInterface $source
      * @param Specification[] $targets
+     * @param ConversionOptionsInterface $options
      * @return ConversionInterface[]
      */
     public function createConversions(
         SpecificationInterface $source,
-        array $targets
+        array $targets,
+        ConversionOptionsInterface $options = null
     );
 }

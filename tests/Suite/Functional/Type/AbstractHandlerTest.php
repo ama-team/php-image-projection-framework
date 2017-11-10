@@ -2,11 +2,9 @@
 
 namespace AmaTeam\Image\Projection\Test\Suite\Unit\Type;
 
-use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\API\Image\ImageInterface;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Specification;
-use AmaTeam\Image\Projection\Test\Support\Assert;
 use AmaTeam\Image\Projection\Test\Support\Dummy\HandlerDummy;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
@@ -50,7 +48,7 @@ class AbstractHandlerTest extends Unit
     public function readFailsOnEmptyResult()
     {
         $specification = (new Specification())->setPattern('');
-        return $this->createHandler()->read($specification);
+        return $this->createHandler()->createReader($specification);
     }
 
     // TODO: test that will assure specification sizes are computed if not

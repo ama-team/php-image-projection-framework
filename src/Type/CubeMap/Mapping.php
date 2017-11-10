@@ -5,18 +5,10 @@ namespace AmaTeam\Image\Projection\Type\CubeMap;
 use AmaTeam\Image\Projection\Type\AbstractValidatingMapping;
 use AmaTeam\Image\Projection\Type\CubeMap\Mapping\Face;
 use AmaTeam\Image\Projection\Type\CubeMap\Mapping\Vector;
+use BadMethodCallException;
 
 class Mapping extends AbstractValidatingMapping
 {
-    /**
-     * @var int
-     */
-    private $size;
-    /**
-     * @var int|float
-     */
-    private $halfSize;
-
     /**
      * @var Face[]
      */
@@ -30,18 +22,9 @@ class Mapping extends AbstractValidatingMapping
      */
     private $inverseFaceNameMap;
 
-    /**
-     * @param int $size
-     */
-    public function __construct($size)
+    public function __construct()
     {
-        // the -1 part is added to ensure that face of width/height N
-        // would never report U or V = N, because that is actually an
-        // out-of-bounds number - face has only N - 1 texels
-        // TODO: ensure that all calculations are done right
-        $this->size = $size - 1;
-        $this->halfSize = ($size - 1) / 2;
-        $this->faces = Face::generateCubeFaces($size);
+        $this->faces = Face::generateCubeFaces();
         $this->faceNameMap = Face::getNames();
         $this->inverseFaceNameMap = array_flip($this->faceNameMap);
     }
@@ -50,8 +33,8 @@ class Mapping extends AbstractValidatingMapping
      * Converts UV mapping to latitude/longitude.
      *
      * @param int|string $faceIndex
-     * @param int $u
-     * @param int $v
+     * @param float $u
+     * @param float $v
      *
      * @return float[]
      */
@@ -62,7 +45,9 @@ class Mapping extends AbstractValidatingMapping
         }
         $face = $this->faces[$faceIndex];
         $vector = $face->vectorize($u, $v);
-        return Vector::convert($vector[0], $vector[1], $vector[2], $vector[3]);
+        // mangling vector since classic XYZ don't map to cube map XYZ
+        $vector = [$vector[2], $vector[0], $vector[1], $vector[3]];
+        return Vector::toPolar($vector);
     }
 
     /**
@@ -73,16 +58,19 @@ class Mapping extends AbstractValidatingMapping
      */
     public function getPosition($latitude, $longitude)
     {
-        $vector = Vector::create($latitude, $longitude, $this->halfSize);
-        $dominant = self::getDominant($vector);
+        $vector = Vector::fromPolar($latitude, $longitude);
+        // mangling vector since classic XYZ don't map to cube map XYZ
+        $vector = [$vector[1], $vector[2], $vector[0], 1];
+        $dominant = Vector::getDominant($vector);
         $value = $vector[$dominant];
+        $vector = Vector::multiply($vector, abs(1 / $value));
         $faceIndex = ($dominant * 2) + ($value < 0 ? 1 : 0);
         $face = $this->faces[$faceIndex];
         $position = $face->map($vector);
         return [
             $this->faceNameMap[$faceIndex],
-            (int) $position[0],
-            (int) $position[1]
+            $position[0],
+            $position[1]
         ];
     }
 
@@ -101,21 +89,5 @@ class Mapping extends AbstractValidatingMapping
     public function getFaces()
     {
         return $this->faceNameMap;
-    }
-
-    /**
-     * @param array $vector
-     * @return int
-     */
-    private static function getDominant(array $vector)
-    {
-        $index = 0;
-        $maximum = abs($vector[0]);
-        // Intentional loop unrolling
-        if (abs($vector[1]) > $maximum) {
-            $index = 1;
-            $maximum = abs($vector[1]);
-        }
-        return abs($vector[2]) > $maximum ? 2 : $index;
     }
 }

@@ -49,11 +49,11 @@ class DefaultGenerator implements GeneratorInterface
     /**
      * @var int
      */
-    private $u = 0;
+    private $column = 0;
     /**
      * @var int
      */
-    private $v = 0;
+    private $row = 0;
 
 
     /**
@@ -95,7 +95,7 @@ class DefaultGenerator implements GeneratorInterface
     public function current()
     {
         if (!$this->cursor) {
-            $this->cursor = $this->generateTile($this->face, $this->u, $this->v);
+            $this->cursor = $this->generateTile($this->face, $this->column, $this->row);
         }
         return $this->cursor;
     }
@@ -117,8 +117,8 @@ class DefaultGenerator implements GeneratorInterface
         if (!$this->key) {
             $this->key = new Position(
                 $this->faces[$this->face],
-                $this->u,
-                $this->v
+                $this->column,
+                $this->row
             );
         }
         return $this->key;
@@ -137,27 +137,33 @@ class DefaultGenerator implements GeneratorInterface
      */
     public function rewind()
     {
-        $this->u = 0;
-        $this->v = 0;
+        $this->column = 0;
+        $this->row = 0;
         $this->face = 0;
         $this->key = null;
         $this->cursor = null;
         $this->toFirstAllowedKey();
     }
 
-    private function generateTile($faceIndex, $u, $v)
+    private function generateTile($faceIndex, $horizontal, $vertical)
     {
         $specification = $this->target;
         $faceName = $this->faces[$faceIndex];
         $position = $this->key();
         $width = $specification->getTileSize()->getWidth();
         $height = $specification->getTileSize()->getHeight();
+        $uStep = 1 / $specification->getSize()->getWidth();
+        $vStep = 1 / $specification->getSize()->getHeight();
+        $uOffset = $horizontal * $width * $uStep + $uStep / 2;
+        $vOffset = $vertical * $height * $vStep + $vStep / 2;
         $image = $this->imageManager->create($width, $height);
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
+                $u = $uOffset + $x * $uStep;
+                $v = $vOffset + $y * $vStep;
                 $coordinates = $this
                     ->mapping
-                    ->getCoordinates($faceName, $u * $width + $x, $v * $height + $y);
+                    ->getCoordinates($faceName, $u, $v);
                 $color = $this
                     ->reader
                     ->getColorAt($coordinates[0], $coordinates[1]);
@@ -184,13 +190,13 @@ class DefaultGenerator implements GeneratorInterface
         $layout = $this->target->getLayout();
         $this->cursor = null;
         $this->key = null;
-        $this->u++;
-        if ($this->u >= $layout->getWidth()) {
-            $this->u = 0;
-            $this->v++;
+        $this->column++;
+        if ($this->column >= $layout->getWidth()) {
+            $this->column = 0;
+            $this->row++;
         }
-        if ($this->v >= $layout->getHeight()) {
-            $this->v = 0;
+        if ($this->row >= $layout->getHeight()) {
+            $this->row = 0;
             $this->face++;
         }
     }

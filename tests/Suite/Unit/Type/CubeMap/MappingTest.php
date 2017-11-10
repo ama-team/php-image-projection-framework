@@ -12,44 +12,36 @@ class MappingTest extends MappingTestSuite
     {
         return [
             [
-                [1000],
                 [0, 0],
-                [Face::FRONT, 500, 500],
+                [Face::FRONT, 0.5, 0.5],
             ],
             [
-                [1000],
                 [atan(0.5), 0],
-                [Face::FRONT, 500, 250],
+                [Face::FRONT, 0.5, 0.25],
             ],
             [
-                [1000],
                 [0, -atan(0.5)],
-                [Face::FRONT, 250, 500],
+                [Face::FRONT, 0.25, 0.5],
             ],
             [
-                [1000],
                 [0, M_PI],
-                [Face::BACK, 500, 500],
+                [Face::BACK, 0.499, 0.5],
             ],
             [
-                [1000],
                 [0, M_PI - atan(0.5)],
-                [Face::BACK, 250, 500],
+                [Face::BACK, 0.25, 0.5],
             ],
             [
-                [1000],
                 [atan(0.5), M_PI],
-                [Face::BACK, 499.99, 250],
+                [Face::BACK, 0.499, 0.25],
             ],
             [
-                [1000],
                 [0, M_PI / 2],
-                [Face::RIGHT, 500, 500],
+                [Face::RIGHT, 0.5, 0.5],
             ],
             [
-                [1000],
                 [-M_PI / 2, 0],
-                [Face::DOWN, 500, 500],
+                [Face::DOWN, 0.5, 0.499],
             ]
         ];
     }
@@ -57,8 +49,8 @@ class MappingTest extends MappingTestSuite
     /**
      * @inheritDoc
      */
-    protected function createMapping(array $parameters)
+    protected function createMapping()
     {
-        return new Mapping(reset($parameters));
+        return new Mapping();
     }
 }

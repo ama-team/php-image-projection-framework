@@ -8,6 +8,9 @@ namespace AmaTeam\Image\Projection\API\Type;
  */
 interface ReaderInterface
 {
+    const INTERPOLATION_NEAREST_NEIGHBOUR = 1;
+    const INTERPOLATION_BILINEAR = 2;
+
     /**
      * Retrieves color at specific location.
      *

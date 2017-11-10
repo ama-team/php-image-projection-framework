@@ -12,19 +12,16 @@ class MappingTest extends MappingTestSuite
     {
         return [
             [
-                [2000, 1000],
                 [0, 0],
-                [MappingInterface::DEFAULT_FACE, 999, 499]
+                [MappingInterface::DEFAULT_FACE, 0.5, 0.5]
             ],
             [
-                [2000, 1000],
                 [M_PI / 2, 0],
-                [MappingInterface::DEFAULT_FACE, 999, 0]
+                [MappingInterface::DEFAULT_FACE, 0.5, 0]
             ],
             [
-                [2000, 1000],
                 [0, -M_PI],
-                [MappingInterface::DEFAULT_FACE, 0, 499]
+                [MappingInterface::DEFAULT_FACE, 0, 0.5]
             ]
         ];
     }
@@ -32,8 +29,8 @@ class MappingTest extends MappingTestSuite
     /**
      * @inheritDoc
      */
-    protected function createMapping(array $parameters)
+    protected function createMapping()
     {
-        return new Mapping($parameters[0], $parameters[1]);
+        return new Mapping(1000, 1000);
     }
 }
