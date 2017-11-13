@@ -2,7 +2,6 @@
 
 namespace AmaTeam\Image\Projection\Test\Support\Dummy;
 
-use AmaTeam\Image\Projection\Geometry\Box;
 use AmaTeam\Image\Projection\Image\Manager;
 use AmaTeam\Image\Projection\Type\AbstractHandler;
 use AmaTeam\Image\Projection\API\Type\MappingInterface;
@@ -23,7 +22,7 @@ class HandlerDummy extends AbstractHandler
         parent::__construct($filesystem, $imageManager);
     }
 
-    public function createMapping(Box $size)
+    public function getMapping()
     {
         return $this->mapping;
     }

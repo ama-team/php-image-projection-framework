@@ -22,7 +22,7 @@ class AbstractValidatingMappingTest extends Unit
     {
         $this->mapping = $this->createPartialMock(
             AbstractValidatingMapping::class,
-            ['getPosition', 'getCoordinates', 'getFaces']
+            ['getPosition', 'getCoordinates', 'getFaces',]
         );
         $this
             ->mapping

@@ -22,26 +22,23 @@ abstract class MappingTestSuite extends Unit
     abstract public function dataProvider();
 
     /**
-     * @param array $parameters
      * @return MappingInterface
      */
-    abstract protected function createMapping(array $parameters);
+    abstract protected function createMapping();
 
     /**
-     * @param array $parameters
      * @param array $coordinates
      * @param array $position
      *
      * @dataProvider dataProvider
      */
     public function testConversion(
-        array $parameters,
         array $coordinates,
         array $position
     ) {
-        $mapping = $this->createMapping($parameters);
+        $mapping = $this->createMapping();
         $computed = $mapping->getPosition($coordinates[0], $coordinates[1]);
-        self::assertEqualArrays($position, $computed, 1);
+        self::assertEqualArrays($position, $computed, 0.01);
         $computed = $mapping->getCoordinates(
             $position[0],
             $position[1],

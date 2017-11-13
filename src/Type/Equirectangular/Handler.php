@@ -2,18 +2,18 @@
 
 namespace AmaTeam\Image\Projection\Type\Equirectangular;
 
-use AmaTeam\Image\Projection\Geometry\Box;
+use AmaTeam\Image\Projection\Constants;
 use AmaTeam\Image\Projection\Type\AbstractHandler;
 
 class Handler extends AbstractHandler
 {
-    const TYPE = 'Equirectangular';
+    const TYPE = Constants::TYPE_EQUIRECTANGULAR;
 
     /**
      * @inheritDoc
      */
-    public function createMapping(Box $size)
+    public function getMapping()
     {
-        return new Mapping($size->getWidth(), $size->getHeight());
+        return new Mapping();
     }
 }

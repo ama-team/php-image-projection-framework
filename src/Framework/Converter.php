@@ -2,10 +2,10 @@
 
 namespace AmaTeam\Image\Projection\Framework;
 
+use AmaTeam\Image\Projection\API\ConversionOptionsInterface;
 use AmaTeam\Image\Projection\API\ConverterInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\API\Type\ReaderInterface;
-use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
 use AmaTeam\Image\Projection\Type\Registry;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -36,13 +36,13 @@ class Converter implements ConverterInterface
     /**
      * @param SpecificationInterface $source
      * @param SpecificationInterface[] $targets
-     * @param FilterInterface[] $filters
+     * @param ConversionOptionsInterface $options
      * @return Conversion[]
      */
     public function createConversions(
         SpecificationInterface $source,
         array $targets,
-        ...$filters
+        ConversionOptionsInterface $options = null
     ) {
         $context = ['source' => $source, 'targets' => $targets];
         $message = 'Converting {source} to targets {targets}';
@@ -51,7 +51,7 @@ class Converter implements ConverterInterface
         $pipelines = [];
         foreach ($targets as $target) {
             $pipelines[] = $this
-                ->instantiateConversion($reader, $target, $filters);
+                ->instantiateConversion($reader, $target, $options);
         }
         return $pipelines;
     }
@@ -61,19 +61,19 @@ class Converter implements ConverterInterface
      *
      * @param SpecificationInterface $source
      * @param SpecificationInterface $target
-     * @param FilterInterface[] $filters
+     * @param ConversionOptionsInterface $options
      * @return Conversion
      */
     public function createConversion(
         SpecificationInterface $source,
         SpecificationInterface $target,
-        ...$filters
+        ConversionOptionsInterface $options = null
     ) {
         $context = ['source' => $source, 'target' => $target];
         $message = 'Converting {source} to target {target}';
         $this->logger->debug($message, $context);
         $reader = $this->getReader($source);
-        return $this->instantiateConversion($reader, $target, $filters);
+        return $this->instantiateConversion($reader, $target, $options);
     }
 
     /**
@@ -85,24 +85,25 @@ class Converter implements ConverterInterface
         return $this
             ->registry
             ->getHandler($source->getType())
-            ->read($source);
+            ->createReader($source);
     }
 
     /**
      * @param ReaderInterface $source
      * @param SpecificationInterface $target
-     * @param FilterInterface[] $filters
+     * @param ConversionOptionsInterface $options
      * @return Conversion
      */
     private function instantiateConversion(
         ReaderInterface $source,
         SpecificationInterface $target,
-        array $filters
+        ConversionOptionsInterface $options = null
     ) {
+        $options = $options ?: new ConversionOptions();
         $generator = $this
             ->registry
             ->getHandler($target->getType())
-            ->createGenerator($source, $target, $filters);
+            ->createGenerator($source, $target, $options);
         return new Conversion($target, $generator, $this->logger);
     }
 }
