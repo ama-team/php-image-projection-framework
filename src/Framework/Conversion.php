@@ -62,7 +62,7 @@ class Conversion implements ConversionInterface
         foreach ($this->generator as $tile) {
             $context = ['tile' => $tile->getPosition()];
             $this->logger->debug('Generated tile {tile}', $context);
-            $this->applyProcessors($tile, $this->target);
+            $tile = $this->applyProcessors($tile, $this->target);
             $this->notifyListeners($tile, $this->target);
         }
     }
@@ -70,6 +70,7 @@ class Conversion implements ConversionInterface
     /**
      * @param TileInterface $tile
      * @param SpecificationInterface $specification
+     * @return TileInterface
      */
     private function applyProcessors(
         TileInterface $tile,
@@ -83,9 +84,11 @@ class Conversion implements ConversionInterface
                 ];
                 $template = 'Applying processor {processor} to tile {tile}';
                 $this->logger->debug($template, $context);
-                $processor->process($tile, $specification);
+                $candidate = $processor->process($tile, $specification);
+                $tile = $candidate instanceof TileInterface ? $candidate : $tile;
             }
         }
+        return $tile;
     }
 
     /**
@@ -121,7 +124,7 @@ class Conversion implements ConversionInterface
         if ($processor instanceof LoggerAwareInterface) {
             $processor->setLogger($this->logger);
         }
-        if (!$this->processors[$order]) {
+        if (!isset($this->processors[$order])) {
             $this->processors[$order] = [];
         }
         $this->processors[$order][] = $processor;

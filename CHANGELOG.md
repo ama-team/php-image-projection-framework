@@ -16,6 +16,8 @@ examples
 adopted `ReaderOptionsInterface` as last parameter
 - `AbstractHandlerInterface::createMapping(Box $size)` was
 modified to `::getMapping()`
+- `ProcessorInterface` now may return a new tile to replace the one it
+has been fed with
 
 ### Added
 - BilinearReader that produces smoother images in exchange for extra
