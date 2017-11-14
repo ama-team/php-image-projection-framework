@@ -2,6 +2,7 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
+use AmaTeam\Image\Projection\API\RegistryInterface;
 use AmaTeam\Image\Projection\Image\Adapter\Discovery;
 use AmaTeam\Image\Projection\API\Image\ImageFactoryInterface;
 use AmaTeam\Image\Projection\Filesystem\Factory;
@@ -14,7 +15,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\Exception\BadMethodCallException;
 
-class Registry
+class Registry implements RegistryInterface
 {
     /**
      * @var FilesystemInterface
@@ -112,13 +113,13 @@ class Registry
     }
 
     /**
-     * @param string $name
+     * @param string $type
      * @param HandlerInterface $handler
      * @return HandlerInterface
      */
-    public function register($name, HandlerInterface $handler)
+    public function register($type, HandlerInterface $handler)
     {
-        $this->registry[$name] = $handler;
+        $this->registry[$type] = $handler;
         return $handler;
     }
 

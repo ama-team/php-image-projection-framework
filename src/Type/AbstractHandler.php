@@ -2,10 +2,10 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
-use AmaTeam\Image\Projection\API\ConversionOptionsInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
+use AmaTeam\Image\Projection\API\Type\SourceOptionsInterface;
 use AmaTeam\Image\Projection\API\Tile\TileInterface;
-use AmaTeam\Image\Projection\API\Type\ReaderOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\TargetOptionsInterface;
 use AmaTeam\Image\Projection\API\Type\ValidatingMappingInterface;
 use AmaTeam\Image\Projection\Constants;
 use AmaTeam\Image\Projection\Framework\Validation\ValidationException;
@@ -60,9 +60,9 @@ abstract class AbstractHandler implements HandlerInterface
      */
     public function createReader(
         SpecificationInterface $specification,
-        ReaderOptionsInterface $options = null
+        SourceOptionsInterface $options = null
     ) {
-        $options = $options ?: new ReaderOptions();
+        $options = $options ?: new SourceOptions();
         $loader = new Loader($this->imageManager, $this->filesystem);
         $pattern = $specification->getPattern();
         $tiles = $loader->load($pattern);
@@ -91,12 +91,13 @@ abstract class AbstractHandler implements HandlerInterface
     public function createGenerator(
         ReaderInterface $source,
         SpecificationInterface $target,
-        ConversionOptionsInterface $options = null
+        TargetOptionsInterface $options = null
     ) {
         if (!$target->getSize()) {
             $message = 'Provided specification doesn\'t contain it\'s size';
             throw new BadMethodCallException($message);
         }
+        $options = $options ?: new TargetOptions();
         $mapping = $this->getMapping();
         $context = ['target' => $target,];
         $this->logger->debug('Creating tile generator for {target}', $context);
@@ -111,7 +112,7 @@ abstract class AbstractHandler implements HandlerInterface
      * @param SpecificationInterface $specification
      * @param MappingInterface $mapping
      * @param TileInterface[][][] $tiles
-     * @param ReaderOptionsInterface $options
+     * @param SourceOptionsInterface $options
      *
      * @return ReaderInterface
      */
@@ -119,7 +120,7 @@ abstract class AbstractHandler implements HandlerInterface
         SpecificationInterface $specification,
         MappingInterface $mapping,
         array $tiles,
-        ReaderOptionsInterface $options
+        SourceOptionsInterface $options
     ) {
         $mode = $options->getInterpolationMode();
         if ($mode === Constants::INTERPOLATION_BILINEAR) {

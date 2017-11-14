@@ -2,7 +2,7 @@
 
 namespace AmaTeam\Image\Projection\API\Type;
 
-interface ReaderOptionsInterface
+interface SourceOptionsInterface
 {
     /**
      * @return string

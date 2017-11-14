@@ -2,12 +2,15 @@
 
 namespace AmaTeam\Image\Projection\Type;
 
-use AmaTeam\Image\Projection\API\Type\ReaderOptionsInterface;
-use AmaTeam\Image\Projection\Constants;
+use AmaTeam\Image\Projection\API\Type\SourceOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\Interpolation;
 
-class ReaderOptions implements ReaderOptionsInterface
+class SourceOptions implements SourceOptionsInterface
 {
-    private $interpolationMode = Constants::INTERPOLATION_BILINEAR;
+    /**
+     * @var string
+     */
+    private $interpolationMode = Interpolation::BILINEAR;
 
     /**
      * @return string

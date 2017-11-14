@@ -47,7 +47,7 @@ class Converter implements ConverterInterface
         $context = ['source' => $source, 'targets' => $targets];
         $message = 'Converting {source} to targets {targets}';
         $this->logger->debug($message, $context);
-        $reader = $this->getReader($source);
+        $reader = $this->getReader($source, $options);
         $pipelines = [];
         foreach ($targets as $target) {
             $pipelines[] = $this
@@ -71,21 +71,25 @@ class Converter implements ConverterInterface
     ) {
         $context = ['source' => $source, 'target' => $target];
         $message = 'Converting {source} to target {target}';
+        $options = $options ?: new ConversionOptions();
         $this->logger->debug($message, $context);
-        $reader = $this->getReader($source);
+        $reader = $this->getReader($source, $options);
         return $this->instantiateConversion($reader, $target, $options);
     }
 
     /**
      * @param SpecificationInterface $source
+     * @param ConversionOptionsInterface $options
      * @return ReaderInterface
      */
-    private function getReader(SpecificationInterface $source)
-    {
+    private function getReader(
+        SpecificationInterface $source,
+        ConversionOptionsInterface $options = null
+    ) {
         return $this
             ->registry
             ->getHandler($source->getType())
-            ->createReader($source);
+            ->createReader($source, $options);
     }
 
     /**

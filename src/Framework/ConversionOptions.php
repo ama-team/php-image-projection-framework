@@ -2,53 +2,77 @@
 
 namespace AmaTeam\Image\Projection\Framework;
 
-use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
 use AmaTeam\Image\Projection\API\ConversionOptionsInterface;
+use AmaTeam\Image\Projection\API\Framework\ProcessingOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\SourceOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\TargetOptionsInterface;
 
 class ConversionOptions implements ConversionOptionsInterface
 {
     /**
-     * @var string
+     * @var SourceOptionsInterface
      */
-    private $interpolationMode = self::INTERPOLATION_BILINEAR;
+    private $source;
     /**
-     * @var FilterInterface[]
+     * @var TargetOptionsInterface
      */
-    private $filters = [];
+    private $target;
+    /**
+     * @var ProcessingOptionsInterface
+     */
+    private $processing;
 
     /**
-     * @return string
+     * @return SourceOptionsInterface
      */
-    public function getInterpolationMode()
+    public function getSource()
     {
-        return $this->interpolationMode;
+        return $this->source;
     }
 
     /**
-     * @param string $interpolationMode
+     * @param SourceOptionsInterface $source
      * @return $this
      */
-    public function setInterpolationMode($interpolationMode)
+    public function setSource($source)
     {
-        $this->interpolationMode = $interpolationMode;
+        $this->source = $source;
         return $this;
     }
 
     /**
-     * @return FilterInterface[]
+     * @return TargetOptionsInterface
      */
-    public function getFilters()
+    public function getTarget()
     {
-        return $this->filters;
+        return $this->target;
     }
 
     /**
-     * @param FilterInterface[] $filters
+     * @param TargetOptionsInterface $target
      * @return $this
      */
-    public function setFilters($filters)
+    public function setTarget($target)
     {
-        $this->filters = $filters;
+        $this->target = $target;
+        return $this;
+    }
+
+    /**
+     * @return ProcessingOptionsInterface
+     */
+    public function getProcessing()
+    {
+        return $this->processing;
+    }
+
+    /**
+     * @param ProcessingOptionsInterface $processing
+     * @return $this
+     */
+    public function setProcessing($processing)
+    {
+        $this->processing = $processing;
         return $this;
     }
 }

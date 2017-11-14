@@ -2,20 +2,24 @@
 
 namespace AmaTeam\Image\Projection\API;
 
-use AmaTeam\Image\Projection\API\Conversion\FilterInterface;
+use AmaTeam\Image\Projection\API\Framework\ProcessingOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\SourceOptionsInterface;
+use AmaTeam\Image\Projection\API\Type\TargetOptionsInterface;
 
 interface ConversionOptionsInterface
 {
-    const INTERPOLATION_NONE = 'none';
-    const INTERPOLATION_BILINEAR = 'bilinear';
+    /**
+     * @return SourceOptionsInterface
+     */
+    public function getSource();
 
     /**
-     * @return string
+     * @return TargetOptionsInterface
      */
-    public function getInterpolationMode();
+    public function getTarget();
 
     /**
-     * @return FilterInterface[]
+     * @return ProcessingOptionsInterface
      */
-    public function getFilters();
+    public function getProcessing();
 }

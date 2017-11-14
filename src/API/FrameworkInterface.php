@@ -34,4 +34,14 @@ interface FrameworkInterface
         $format = Format::JPEG,
         EncodingOptions $options = null
     );
+
+    /**
+     * @return ConverterInterface
+     */
+    public function getConverter();
+
+    /**
+     * @return RegistryInterface
+     */
+    public function getRegistry();
 }

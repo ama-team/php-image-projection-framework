@@ -5,6 +5,7 @@ namespace AmaTeam\Image\Projection;
 use AmaTeam\Image\Projection\API\ConversionInterface;
 use AmaTeam\Image\Projection\API\ConverterInterface;
 use AmaTeam\Image\Projection\API\FrameworkInterface;
+use AmaTeam\Image\Projection\API\RegistryInterface;
 use AmaTeam\Image\Projection\API\SpecificationInterface;
 use AmaTeam\Image\Projection\Framework\Converter;
 use AmaTeam\Image\Projection\Conversion\Listener\SaveListener;
@@ -18,7 +19,7 @@ use Psr\Log\NullLogger;
 class Framework implements FrameworkInterface
 {
     /**
-     * @var Registry
+     * @var RegistryInterface
      */
     private $registry;
     /**
@@ -31,11 +32,11 @@ class Framework implements FrameworkInterface
     private $converter;
 
     /**
-     * @param Registry $registry
+     * @param RegistryInterface $registry
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        Registry $registry = null,
+        RegistryInterface $registry = null,
         LoggerInterface $logger = null
     ) {
         $logger = $logger ?: new NullLogger();
@@ -144,7 +145,7 @@ class Framework implements FrameworkInterface
     }
 
     /**
-     * @return Registry
+     * @return RegistryInterface
      */
     public function getRegistry()
     {
