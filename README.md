@@ -150,9 +150,10 @@ this case:
 ```php
 // only specified faces will be created
 $filter = new FaceFilter('f', 'b');
+$options = (new ConversionOptions())->setFilters([$filter]);
 $framework
     ->getConverter()
-    ->createConversion($source, $target, $filter)
+    ->createConversion($source, $target, $options)
     ->run();
 ```
 
