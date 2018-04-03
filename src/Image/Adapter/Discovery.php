@@ -7,7 +7,10 @@ use RuntimeException;
 
 class Discovery
 {
-    const FACTORIES = [
+    // storing as static variable because older HHVM doesn't allow to
+    // store arrays in constants
+
+    private static $factories = [
         Gd\ImageFactory::class,
         Imagick\ImageFactory::class,
     ];
@@ -17,7 +20,7 @@ class Discovery
      */
     public static function find()
     {
-        foreach (self::FACTORIES as $backend) {
+        foreach (self::$factories as $backend) {
             if ($backend::supported()) {
                 return new $backend;
             }

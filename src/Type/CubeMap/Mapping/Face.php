@@ -28,10 +28,14 @@ class Face
     const RIGHT = 'r';
     const BACK = 'b';
     const DOWN = 'd';
+
+    // storing as static variables because older HHVM doesn't allow to
+    // store arrays in constants
+
     /**
      * y = +1
      */
-    const UP_DEFINITION = [
+    private static $upDefinition = [
         'name' => self::UP,
         'pin' => [1, 1],
         'u' => [0, 1],
@@ -40,7 +44,7 @@ class Face
     /**
      * x = -1
      */
-    const LEFT_DEFINITION = [
+    private static $leftDefinition = [
         'name' => self::LEFT,
         'pin' => [0, -1],
         'u' => [2, 1],
@@ -49,7 +53,7 @@ class Face
     /**
      * z = +1
      */
-    const FRONT_DEFINITION = [
+    private static $frontDefinition = [
         'name' => self::FRONT,
         'pin' => [2, 1],
         'u' => [0, 1],
@@ -58,7 +62,7 @@ class Face
     /**
      * x = +1
      */
-    const RIGHT_DEFINITION = [
+    private static $rightDefinition = [
         'name' => self::RIGHT,
         'pin' => [0, 1],
         'u' => [2, -1],
@@ -67,7 +71,7 @@ class Face
     /**
      * z = -1
      */
-    const BACK_DEFINITION = [
+    private static $backDefinition = [
         'name' => self::BACK,
         'pin' => [2, -1],
         'u' => [0, -1],
@@ -76,12 +80,91 @@ class Face
     /**
      * y = -1
      */
-    const DOWN_DEFINITION = [
+    private static $downDefinition = [
         'name' => self::DOWN,
         'pin' => [1, -1],
         'u' => [0, 1],
         'v' => [2, -1]
     ];
+
+    public static function getUpDefinition()
+    {
+        /**
+         * y = +1
+         */
+        return [
+            'name' => self::UP,
+            'pin' => [1, 1],
+            'u' => [0, 1],
+            'v' => [2, 1]
+        ];
+    }
+
+    public static function getLeftDefinition()
+    {
+        /**
+         * x = -1
+         */
+        return [
+            'name' => self::LEFT,
+            'pin' => [0, -1],
+            'u' => [2, 1],
+            'v' => [1, -1],
+        ];
+    }
+
+    public static function getFrontDefinition()
+    {
+
+        /**
+         * z = +1
+         */
+        return [
+            'name' => self::FRONT,
+            'pin' => [2, 1],
+            'u' => [0, 1],
+            'v' => [1, -1],
+        ];
+    }
+
+    public static function getRightDefinition()
+    {
+        /**
+         * x = +1
+         */
+        return [
+            'name' => self::RIGHT,
+            'pin' => [0, 1],
+            'u' => [2, -1],
+            'v' => [1, -1]
+        ];
+    }
+
+    public static function getBackDefinition()
+    {
+        /**
+         * z = -1
+         */
+        return [
+            'name' => self::BACK,
+            'pin' => [2, -1],
+            'u' => [0, -1],
+            'v' => [1, -1]
+        ];
+    }
+
+    public static function getDownDefinition()
+    {
+        /**
+         * y = -1
+         */
+        return [
+            'name' => self::DOWN,
+            'pin' => [1, -1],
+            'u' => [0, 1],
+            'v' => [2, -1]
+        ];
+    }
 
     /**
      * @var string
@@ -192,12 +275,12 @@ class Face
     public static function generateCubeFaces()
     {
         return [
-            self::create(self::RIGHT_DEFINITION),
-            self::create(self::LEFT_DEFINITION),
-            self::create(self::UP_DEFINITION),
-            self::create(self::DOWN_DEFINITION),
-            self::create(self::FRONT_DEFINITION),
-            self::create(self::BACK_DEFINITION),
+            self::create(self::$rightDefinition),
+            self::create(self::$leftDefinition),
+            self::create(self::$upDefinition),
+            self::create(self::$downDefinition),
+            self::create(self::$frontDefinition),
+            self::create(self::$backDefinition),
         ];
     }
 }
