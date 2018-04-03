@@ -12,52 +12,52 @@ class FaceTest extends Unit
     {
         return [
             [
-                Face::FRONT_DEFINITION,
+                Face::getFrontDefinition(),
                 [0.5, 0.5],
                 [0, 0, 1]
             ],
             [
-                Face::FRONT_DEFINITION,
+                Face::getFrontDefinition(),
                 [0, 0],
                 [-1, 1, 1]
             ],
             [
-                Face::FRONT_DEFINITION,
+                Face::getFrontDefinition(),
                 [1, 1],
                 [1, -1, 1]
             ],
             [
-                Face::BACK_DEFINITION,
+                Face::getBackDefinition(),
                 [0, 0],
                 [1, 1, -1]
             ],
             [
-                Face::BACK_DEFINITION,
+                Face::getBackDefinition(),
                 [1, 1],
                 [-1, -1, -1]
             ],
             [
-                Face::RIGHT_DEFINITION,
+                Face::getRightDefinition(),
                 [0, 0],
                 [1, 1, 1]
             ],
             [
-                Face::RIGHT_DEFINITION,
+                Face::getRightDefinition(),
                 [1, 1],
                 [1, -1, -1]
             ],
             [
-                Face::LEFT_DEFINITION,
+                Face::getLeftDefinition(),
                 [0, 0],
                 [-1, 1, -1]
             ],
             [
-                Face::UP_DEFINITION,
+                Face::getUpDefinition(),
                 [0, 0],
                 [-1, 1, -1]
             ],
             [
-                Face::DOWN_DEFINITION,
+                Face::getDownDefinition(),
                 [0, 0],
                 [-1, -1, 1]
             ],

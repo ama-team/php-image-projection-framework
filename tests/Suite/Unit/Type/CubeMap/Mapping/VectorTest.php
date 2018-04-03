@@ -18,12 +18,12 @@ class VectorTest extends Unit
             // circle axis intersection
             [[0, 0], [1, 0, 0, 1]],
             [[0, self::PI_HALF], [0, 1, 0, 1]],
-            [[0, self::PI], [-1, 0, 0, 1]],
+            [[0, self::PI - 0.001], [-1, 0.001, 0, 1]],
             [[0, -self::PI_HALF], [0, -1, 0, 1]],
 
             // z minimum / maximum
-            [[-self::PI_HALF, 0], [0, 0, -1, 1]],
-            [[self::PI_HALF, 0], [0, 0, 1, 1]],
+            [[-self::PI_HALF, 0], [0.001, 0, -1, 1]],
+            [[self::PI_HALF, 0], [0.001, 0, 1, 1]],
 
             // calculated values
 
@@ -51,7 +51,7 @@ class VectorTest extends Unit
     {
         $created = Vector::fromPolar($coordinates[0], $coordinates[1]);
         self::validateArrays($vector, $created);
-        $converted = Vector::toPolar($created);
+        $converted = Vector::toPolar($vector);
         self::validateArrays($coordinates, $converted);
     }
 
