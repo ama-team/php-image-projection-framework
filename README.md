@@ -17,7 +17,7 @@ cube map projection types one into another.
 ## Installation
 
 ```bash
-composer require ama-team/image-projection-framework
+composer require ama-team/projection-framework
 ```
 
 PHP 5.6+ and GD / Imagick are required. All file operations are done 
