@@ -28,10 +28,11 @@ through `league/flysystem`, which is explicitly set as dependency.
 ### Sixty-second start
 
 ```php
+use \AmaTeam\Image\Projection\API\Image\Format;
 use \AmaTeam\Image\Projection\Framework;
 use \AmaTeam\Image\Projection\Framework\EncodingOptions;
+use \AmaTeam\Image\Projection\Geometry\Box;
 use \AmaTeam\Image\Projection\Specification;
-use \AmaTeam\Image\Projection\Image\Format;
 
 $framework = new Framework();
 $source = new Specification('equirect', 'tmp/uploads/source.jpg');
@@ -69,12 +70,12 @@ done using `#convertAll()`, which uses single reader:
 $targets = array_map(function ($index) {
     $side = 256 * (int) pow($index, 2);
     $tileSide = min($side, 512);
-    $size = $side / $side;
+    $size = $index;
     $tileSize = new Box($tileSide, $tileSide);
     $layout = new Box($size, $size);
     $path = sprintf('static/pano/%d/{f}/{x}/{y}.jpg', $index);
     return new Specification('cube', $path, $tileSize, $layout);
-}, range(0, 3));
+}, range(1, 3));
 
 $framework->convertAll($source, $targets);
 ```
